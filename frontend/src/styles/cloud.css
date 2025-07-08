@@ -1,0 +1,73 @@
+.clouds {
+  height: 30vh;
+  width: 30vw;
+  border-radius: 50%;
+  filter: blur(20px);
+  background-color: orangered;
+  position: relative;
+  animation-name: cloudAnimation;
+  animation-duration: 5s;
+  animation-timing-function: linear;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+}
+
+.cloud1 {
+    height: 30vh;
+  width: 30vw;
+  border-radius: 50%;
+  filter: blur(20px);
+  background-color: orangered;
+  position: absolute;
+  animation-name: cloud1Animation;
+  animation-duration: 5s;
+  animation-timing-function: linear;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+}
+
+.cloud2 {
+    height: 30vh;
+  width: 30vw;
+  border-radius: 50%;
+  filter: blur(25px);
+  background-color: orangered;
+  position: absolute;
+  animation-name: cloud2Animation;
+  animation-duration: 5s;
+  animation-timing-function: linear;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+}
+
+.cloud3 {
+    height: 30vh;
+  width: 30vw;
+  border-radius: 50%;
+  filter: blur(25px);
+  background-color: orangered;
+  position: absolute;
+  animation-name: cloud1Animation;
+  animation-duration: 5s;
+  animation-timing-function: linear;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+}
+
+@keyframes cloud1Animation {
+  0% {
+    transform: translate(35%, -3%);
+  }
+  100% {
+    transform: translate(0%, 10%);
+  }
+}
+
+@keyframes cloud2Animation {
+  0% {
+    transform: translate(5%, -5%);
+  }
+  100% {
+    transform: translate(-20%, 30%);
+  }
+}
