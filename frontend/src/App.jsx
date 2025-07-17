@@ -7,7 +7,7 @@ import { AuthContext} from "./contexts/AuthContext";
 import VideoMeetComponent from "./components/VideoMeet";
 import HomePage from "./pages/HomePage";
 import { HistoryProvider } from "./contexts/HistoryContext";
-import History from "./components/history";
+import History from "./components/History";
 import server from "./environment";
 import { useContext, useState, useEffect } from "react";
 import axios from "axios";
