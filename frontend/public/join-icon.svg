@@ -1,3 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" color="#000000" fill="none">
-    <path d="M5.82338 12L4.27922 10.4558C2.57359 8.75022 2.57359 5.98485 4.27922 4.27922C5.98485 2.57359 8.75022 2.57359 10.4558 4.27922L19.7208 13.5442C21.4264 15.2498 21.4264 18.0152 19.7208 19.7208C18.0152 21.4264 15.2498 21.4264 13.5442 19.7208L10.0698 16.2464C9.00379 15.1804 9.00379 13.4521 10.0698 12.386C11.1358 11.32 12.8642 11.32 13.9302 12.386L15.8604 14.3162" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
+<svg width="800px" height="800px" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <title>link</title>
+  <g id="Layer_2" data-name="Layer 2">
+    <g id="invisible_box" data-name="invisible box">
+      <rect width="48" height="48" fill="none"/>
+    </g>
+    <g id="icons_Q2" data-name="icons Q2">
+      <path d="M13.9,44a10,10,0,0,1-7-2.9,9.8,9.8,0,0,1,0-14l7.2-7.2a9.8,9.8,0,0,1,14,0,2,2,0,0,1-2.8,2.8,6,6,0,0,0-8.4,0L9.7,29.9a5.9,5.9,0,0,0,8.4,8.4l4.5-4.7a2,2,0,0,1,2.8,2.8l-4.5,4.7A10,10,0,0,1,13.9,44Z"/>
+      <path d="M26.9,31a10,10,0,0,1-7-2.9,2,2,0,0,1,2.8-2.8,6,6,0,0,0,8.4,0l7.2-7.2a5.9,5.9,0,0,0-8.4-8.4l-4.5,4.7a2,2,0,0,1-2.8-2.8l4.5-4.7a9.9,9.9,0,0,1,14,14l-7.2,7.2A10,10,0,0,1,26.9,31Z"/>
+    </g>
+  </g>
 </svg>

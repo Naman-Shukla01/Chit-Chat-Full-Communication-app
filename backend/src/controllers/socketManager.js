@@ -65,25 +65,28 @@ export const connectToSocket = (server) => {
         await newMessage.save();
         await newMessage.populate("sender")
         
-         const roomId = [sender, receiver].sort().join("-"); 
-        socket.join(roomId);
+        //  const roomId = [sender, receiver].sort().join("-"); 
+        // socket.join(roomId);
         io.to(roomId).emit("receive-message", newMessage);
     })
 
 
     //Meeting
-    socket.on("join-call", (path) => {
+    socket.on("join-call", (path, username) => {
       socket.join(path);
+      
       if (connections[path] === undefined) {
         connections[path] = [];
       }
       connections[path].push(socket.id);
-      console.log(connections[path])
 
       timeOnline[socket.id] = new Date();
 
       connections[path].forEach((element) => {
-        io.to(element).emit("user-joined", socket.id, connections[path]);
+        if (element !== socket.id) {
+    io.to(element).emit("user-joined", socket.id, connections[path], username);
+  } 
+
       });
 
       if (messages[path] !== undefined) {
@@ -154,6 +157,7 @@ export const connectToSocket = (server) => {
             if(connections[key].length === 0){
               delete connections[key];
             }
+            console.log("hi")
           }
         });
       }

@@ -3,12 +3,11 @@ import "./App.css";
 import "./styles/cloud.css"
 import LandingPage from "./pages/LandingPage";
 import AuthPage from "./pages/AuthPage";
-import { AuthContext, AuthProvider } from "./contexts/AuthContext";
+import { AuthContext} from "./contexts/AuthContext";
 import VideoMeetComponent from "./components/VideoMeet";
 import HomePage from "./pages/HomePage";
 import { HistoryProvider } from "./contexts/HistoryContext";
-import History from "./pages/history";
-import ChatWindow from "./components/ChatWindow"
+import History from "./components/history";
 import server from "./environment";
 import { useContext, useState, useEffect } from "react";
 import axios from "axios";
@@ -18,8 +17,9 @@ import MeetingPage from "./pages/MeetingPage";
 function App() {
   const {userData, setUserData} = useContext(AuthContext)
   const [loading, setLoading] = useState(true);
-  let [groups, setGroups] = useState([]);
-  let [chats, setChats] = useState([]);
+  const [groups, setGroups] = useState([]);
+  const [chats, setChats] = useState([]);
+  const [showProfile, setShowProfile] = useState(false);
 
   let navigate = useNavigate();
 
@@ -32,7 +32,7 @@ function App() {
           setLoading(false);
           return;
         }
-        // const userResponse = await handleLogin(undefined, undefined, token)
+        
         const userResponse = await axios.get(`${server.dev}/api/v1/users/login`, {
           params: {token}
         })
@@ -65,10 +65,11 @@ function App() {
 
     fetchData();
   }, []);
-  if(!userData && location.pathname!="/"){
+  
+  if (loading) return <div className="transition-transform ">Loading...</div>;
+  if(!userData && location.pathname!="/" && location.pathname!="/auth") {
     navigate('/auth')
   }
-  if (loading) return <div className="transition-transform ">Loading...</div>;
   return (
       
         <HistoryProvider>
@@ -76,15 +77,16 @@ function App() {
             <Route path="/" element={<LandingPage />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/history" element={<History />} />
-            <Route path="/meeting" element={<MeetingPage/>}></Route>
+            <Route path="/meeting" element={<MeetingPage showProfile={showProfile} setShowProfile={setShowProfile}/>}></Route>
             <Route path="/home" element={<HomePage 
             user={userData}
               groups={groups}
               setGroups={setGroups}
               chats={chats}
-              setChats={setChats}/>} />
+              setChats={setChats}
+              showProfile={showProfile} setShowProfile={setShowProfile}/>} />
             <Route path="/:url" element={<VideoMeetComponent />} />
-            <Route path="/ai-chatbot" element={<AiChatWindow user={userData}/>} />
+            <Route path="/ai-chatbot" element={<AiChatWindow user={userData} showProfile={showProfile} setShowProfile={setShowProfile}/>} />
           </Routes>
         </HistoryProvider>
       

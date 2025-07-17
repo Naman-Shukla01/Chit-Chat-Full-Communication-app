@@ -3,7 +3,7 @@
   width: 30vw;
   border-radius: 50%;
   filter: blur(20px);
-  background-color: orangered;
+  background-color: #bb8e5b;
   position: relative;
   animation-name: cloudAnimation;
   animation-duration: 5s;
@@ -17,7 +17,7 @@
   width: 30vw;
   border-radius: 50%;
   filter: blur(20px);
-  background-color: orangered;
+  background-color: #bb8e5b;
   position: absolute;
   animation-name: cloud1Animation;
   animation-duration: 5s;
@@ -27,11 +27,11 @@
 }
 
 .cloud2 {
-    height: 30vh;
-  width: 30vw;
+    height: 40vh;
+  width: 40vw;
   border-radius: 50%;
   filter: blur(25px);
-  background-color: orangered;
+  background-color: #bb8e5b;
   position: absolute;
   animation-name: cloud2Animation;
   animation-duration: 5s;
@@ -45,7 +45,7 @@
   width: 30vw;
   border-radius: 50%;
   filter: blur(25px);
-  background-color: orangered;
+  background-color: #f3f1ef;
   position: absolute;
   animation-name: cloud1Animation;
   animation-duration: 5s;

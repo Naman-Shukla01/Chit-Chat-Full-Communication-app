@@ -66,9 +66,9 @@ const ChatTab = ({
   };
 
   return (
-    <div className="  ml-14 rounded-2xl cursor-pointer p-5 not-sm:p-2 bg-[#f5d8b87e] md:w-[35vw]   sm:w-[30vw] not-sm:w-[100vw] h-[100vh] ">
-      <div className="flex justify-between ">
-        <h1 className="text-xl font-bold mt-2">Hi, {user.name}</h1>
+    <div className=" sm:mt-2 sm:ml-14 rounded-2xl cursor-pointer p-5 not-sm:p-2 bg-[#f5d8b87e]  sm:w-[35vw] not-sm:w-[100vw] h-[100vh] ">
+      <div className="flex justify-between not-sm:m-4">
+        <h1 className="text-xl font-bold">Chit Chat</h1>
         <div>
           <img
             onClick={() => {
@@ -77,7 +77,7 @@ const ChatTab = ({
               setCreateGroupClicked(false);
               setJoinGroupClicked(false);
             }}
-            class="m-3 text-xl"
+            class=" text-xl"
             src="/menu-icon.svg"
             alt=""
           />
@@ -131,7 +131,7 @@ const ChatTab = ({
       </div>
       {showOptions && (
         <div className="fixed inset-0 bg-black/50 w-full h-full z-10 flex justify-center ">
-          <div className="fixed p-8 border-2 border-[#fcd1a0] flex flex-col bg-[#FAECDC] z-10  mt-12 not-sm:p-1 rounded-2xl">
+          <div className="fixed p-8 border-2 border-[#fcd1a0] flex flex-col bg-[#FAECDC] z-10  mt-12 not-sm:p-4 rounded-2xl">
             <div className="flex flex-row justify-between">
               <div className="text-2xl pb-8">New Chat</div>
 
@@ -151,7 +151,7 @@ const ChatTab = ({
                 setJoinGroupClicked(false);
                 setShowOptions(false);
               }}
-              className="  flex hover:bg-yellow-100 rounded-2xl"
+              className="mt-4  flex hover:bg-yellow-100 rounded-2xl"
             >
               <img src="/user-add-icon.svg" alt="" />
               <div className="text-lg font-semibold m-2">Create chat</div>
@@ -296,19 +296,20 @@ const ChatTab = ({
     
               {chats?.map((chat) => {
                 return (
-                  <div className="items-center hover:bg-yellow-100 rounded-2xl">
-                    <div className="flex justify-between">
-                      <div className=" flex">
-                        <h1 className="p-3 px-4 my-1 rounded-full font-bold bg-white h-fit w-fit">
+                  <div  onClick={() => {
+                            setCurrentChat(chat);
+                            setCurrentGroup(false);
+                          }} className={`p-0.7  hover:bg-[#f8b6707e] ${
+                      currentChat && "bg-[#FFBF78]"
+                    }  rounded-2xl`}>
+                    <div className="flex justify-between ">
+                      <div className=" flex items-center">
+                        <h1 className="flex w-8 h-8 m-1 rounded-full bg-white font-bold items-center justify-center">
                           {chat.username.charAt(0).toUpperCase()}
                         </h1>
                         <h1
-                          className="text-lg rounded p-2 font-semibold"
+                          className="text-lg rounded pl-2.5 font-semibold"
                           key={chat._id}
-                          onClick={() => {
-                            setCurrentChat(chat);
-                            setCurrentGroup(false);
-                          }}
                         >
                           {chat.username}
                         </h1>
@@ -339,7 +340,7 @@ const ChatTab = ({
                   >
                     <div className="flex justify-between">
                       <div className=" flex items-center">
-                        <h1 className="p-1.5 m-1 rounded-full bg-white font-bold  h-fit w-fit">
+                        <h1 className="flex w-8 h-8 m-1 rounded-full bg-white font-bold items-center justify-center">
                           {group.groupname.charAt(0).toUpperCase()}
                         </h1>
                         <h1
@@ -357,7 +358,7 @@ const ChatTab = ({
           )}
         </div>
       </div>
-      <div className="fixed bottom-5 z-20 p-5 bg-[#FAECDC]">{error && <p className="text-red-600">{error}</p> }</div>
+      <div className="">{error && <p className="text-red-600 fixed bottom-5 z-20 p-5 bg-[#FAECDC] ">{error}</p> }</div>
     </div>
   );
 };

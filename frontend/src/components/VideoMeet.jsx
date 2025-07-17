@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import "../styles/videoMeetComponent.css";
 import { TextField, Button, IconButton, Badge } from "@mui/material";
 import VideocamIcon from "@mui/icons-material/Videocam";
@@ -13,6 +13,7 @@ import io from "socket.io-client";
 import { href, useNavigate } from "react-router-dom";
 import "../styles/videoMeetComponent.css";
 import withAuth from "../utils/withAuth";
+import { AuthProvider } from "../contexts/AuthContext";
 
 const server_url = "http://localhost:3000";
 
@@ -269,7 +270,7 @@ const VideoMeetComponent = () => {
     socketRef.current.on("signal", gotMessageFromServer);
 
     socketRef.current.on("connect", () => {
-      socketRef.current.emit("join-call", window.location.href);
+      socketRef.current.emit("join-call", window.location.href, username);
 
       socketIdRef.current = socketRef.current.id;
 
@@ -279,7 +280,8 @@ const VideoMeetComponent = () => {
         setVideos((videos) => videos.filter((video) => video.socketId !== id));
       });
 
-      socketRef.current.on("user-joined", (id, clients) => {
+      socketRef.current.on("user-joined", (id, clients, name) => {
+        console.log(name)
         clients.forEach((socketListId) => {
           connections[socketListId] = new RTCPeerConnection(
             peerConfigConnections
@@ -304,7 +306,7 @@ const VideoMeetComponent = () => {
               setVideos((videos) => {
                 const updatedVideos = videos.map((video) =>
                   video.socketId === socketListId
-                    ? { ...video, stream: event.stream }
+                    ? { ...video, stream: event.stream , username: name}
                     : video
                 );
 
@@ -317,6 +319,7 @@ const VideoMeetComponent = () => {
                 stream: event.stream,
                 autoPlay: true,
                 playsInline: true,
+                username: name,
               };
 
               setVideos((videos) => {
@@ -395,6 +398,7 @@ const VideoMeetComponent = () => {
   let handleEndCall = () => {
     try {
       let tracks = localVideoRef.current.srcObject.getTracks();
+      socketRef.current.disconnect()
 
       tracks.forEach((track) => track.stop());
       navigate("/home");
@@ -571,7 +575,8 @@ const VideoMeetComponent = () => {
               autoPlay
               muted
             ></video>
-            <div className="overflow-y-scroll min-w-screen h-[100vh] flex p-4  items-center justify-center">
+            <h2 className="text-white text-xl">{username}</h2>
+            <div className="overflow-y-scroll flex-col min-w-screen h-[100vh] flex p-4  items-center justify-center">
               {/* <div className="bg-gray-900 max-w-[75vw] max-h-[75vh] m-2 min-w-[40vw] min-h-[25vw] h-full w-full"></div>
                 <div className="bg-gray-900 max-w-[75vw] max-h-[75vh] m-2 min-w-[40vw] min-h-[25vw] h-full w-full"></div>
                 <div className="bg-gray-900 max-w-[75vw] max-h-[75vh] m-2 min-w-[40vw] min-h-[25vw] h-full w-full"></div>
@@ -594,7 +599,7 @@ const VideoMeetComponent = () => {
                     }}
                   ></video>
 
-                  <h2 className="text-white text-xl">{username}</h2>
+                  <h2 className="text-white text-xl flex justify-end">{video.username}</h2>
                 </div>
               ))}
             </div>

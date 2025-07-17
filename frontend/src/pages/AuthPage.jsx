@@ -13,7 +13,8 @@ const AuthPage = () => {
   const [message, setMessage] = useState();
   const navigate = useNavigate();
 
-  const { handleRegister, handleLogin, userData } = useContext(AuthContext);
+  const { handleRegister, handleLogin, userData, setUserData } = useContext(AuthContext);
+  console.log(userData)
   if(userData) {
     navigate("/home");
   }
@@ -38,7 +39,8 @@ const AuthPage = () => {
   const handleSignin = async (e) => {
     try {
       e.preventDefault();
-      let result = await handleLogin(username, password);
+      await handleLogin(username, password);
+     
       
     } catch (error) {
       console.log(error);
@@ -48,7 +50,7 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="min-h-screen min-w-screen bg-orange-400 p-4">
+    <div className="min-h-screen min-w-screen bg-[#FAECDC] p-4">
       <div className="h-[80vh]  shadow-xl/20 m-6 not-sm:shadow-lg not-sm:m-0 not-sm:h-[70vh]  bg-white overflow-hidden drop-shadow-gray-800 rounded-lg p-6 not-sm:p-1 not-sm:grid-cols-1 grid grid-cols-2 items-center justify-center ">
         <div className="items-center justify-center">
           <div className="flex flex-col items-center justify-center">

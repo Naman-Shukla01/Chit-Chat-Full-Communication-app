@@ -102,7 +102,7 @@ const getUserHistory = async (req, res) => {
     const meetings = await Meeting.find({ user_id: user.username });
 
     res.json(meetings);
-    console.log("done");
+    console.log(user, meetings);
   } catch (err) {
     res.json({ message: "Something went wrong ERROR:", err });
   }
@@ -110,7 +110,7 @@ const getUserHistory = async (req, res) => {
 
 const addToHistory = async (req, res) => {
   const { token, meetingCode } = req.body;
-  console.log(token, meetingCode);
+
   try {
     const user = await User.findOne({ token: token });
     const newMeeting = new Meeting({

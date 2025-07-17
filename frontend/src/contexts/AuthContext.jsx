@@ -42,11 +42,11 @@ export const AuthProvider = ({ children }) => {
       let request = await client.post("/login", {
         username: username,
         password: password,
-        token: token
       });
 
       if (request.status === httpStatus.OK) {
-        localStorage.setItem("token", request.data.token);
+         localStorage.setItem("token", request.data.token);
+        setUserData({_id: request.data._id, name: request.data.name, username: request.data.username})
         router("/home")
       }
     } catch (err) {

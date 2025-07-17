@@ -1,19 +1,17 @@
-import Sidebar from "../components/Sidebar"
-import MeetingWindow from "./MeetingWindow"
+import Sidebar from "../components/Sidebar";
+import MeetingWindow from "../components/MeetingWindow";
+import ProfilePage from "./ProfilePage";
 
-const MeetingPage = () => {
+const MeetingPage = ({ showProfile, setShowProfile }) => {
   return (
-   <div className="flex">
-            
-<Sidebar />
-           
-      
-    
-<MeetingWindow />
- 
-          
-        </div>
-  )
-}
+    <div className="flex bg-[#FAECDC] min-h-screen">
+      <Sidebar showProfile={showProfile} setShowProfile={setShowProfile} />
 
-export default MeetingPage
+      {showProfile && <ProfilePage />}
+
+      <MeetingWindow />
+    </div>
+  );
+};
+
+export default MeetingPage;

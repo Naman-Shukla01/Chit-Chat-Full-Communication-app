@@ -15,7 +15,7 @@ const client = axios.create({
 });
 
 export const HistoryProvider = ({ children }) => {
-  const authContext = useContext(HistoryContext);
+  const historyContext = useContext(HistoryContext);
 
     const getHistoryOfUser = async () => {
         try {
@@ -38,6 +38,7 @@ export const HistoryProvider = ({ children }) => {
                 token: localStorage.getItem("token"),
                 meetingCode: meetingCode,
             })
+            console.log(meetingCode, res);
         return res.data;
         } catch (err) {
             throw err;
