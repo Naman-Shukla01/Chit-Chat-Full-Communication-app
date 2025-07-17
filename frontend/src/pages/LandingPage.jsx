@@ -30,7 +30,7 @@ const LandingPage = () => {
           <img src="/mobile.png" alt="" />
         </div>
 
-        <div className="clouds">
+        <div className="clouds -z-10 ">
           <div className="cloud1"></div>
           <div className="cloud2"></div>
           <div className="cloud3"></div>
