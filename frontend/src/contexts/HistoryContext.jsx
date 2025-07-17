@@ -11,7 +11,7 @@ import axios from "axios";
 export const HistoryContext = createContext();
 
 const client = axios.create({
-  baseURL: "http://localhost:3000/api/v1/users",
+  baseURL: `${server.prod}/api/v1/users`,
 });
 
 export const HistoryProvider = ({ children }) => {

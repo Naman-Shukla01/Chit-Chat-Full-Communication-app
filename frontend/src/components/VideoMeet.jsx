@@ -14,8 +14,9 @@ import { href, useNavigate } from "react-router-dom";
 import "../styles/videoMeetComponent.css";
 import withAuth from "../utils/withAuth";
 import { AuthProvider } from "../contexts/AuthContext";
+import server from "../environment";
 
-const server_url = "http://localhost:3000";
+const server_url = server.prod;
 
 var connections = {};
 

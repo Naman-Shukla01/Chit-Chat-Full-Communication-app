@@ -24,7 +24,7 @@ const ChatTab = ({
     try{
         e.preventDefault();
 
-    const res = await axios.post(`${server.dev}/api/chat/create`, {
+    const res = await axios.post(`${server.prod}/api/chat/create`, {
       username: e.target.name.value,
       senderId: user._id,
     });
@@ -42,7 +42,7 @@ const ChatTab = ({
   const createGroup = async (e) => {
     e.preventDefault();
     console.log(user);
-    const res = await axios.post(`${server.dev}/api/group/create`, {
+    const res = await axios.post(`${server.prod}/api/group/create`, {
       name: e.target.name.value,
       password: e.target.password.value,
       userId: user._id,
@@ -55,7 +55,7 @@ const ChatTab = ({
   const joinGroup = async (e) => {
     e.preventDefault();
 
-    const res = await axios.post(`${server.dev}/api/group/join`, {
+    const res = await axios.post(`${server.prod}/api/group/join`, {
       name: e.target.name.value,
       password: e.target.password.value,
       userId: user._id,
