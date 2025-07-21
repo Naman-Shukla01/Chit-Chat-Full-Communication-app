@@ -12,7 +12,7 @@ import server from "../environment";
 export const HistoryContext = createContext();
 
 const client = axios.create({
-  baseURL: `${server.prod}/api/v1/users`,
+  baseURL: `${server.dev}/api/v1/users`,
 });
 
 export const HistoryProvider = ({ children }) => {

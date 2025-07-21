@@ -12,6 +12,7 @@ const joinChat = async (req, res) => {
 }
 
 const createChat = async (req, res) => {
+  console.log(req.body)
     let {username, senderId} = req.body;
     let user = await User.findOne({username: username});
     

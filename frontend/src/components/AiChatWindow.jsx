@@ -18,7 +18,7 @@ const AiChatWindow = ({ user, showProfile, setShowProfile }) => {
   }, [messages]);
 
   const ai = new GoogleGenAI({
-    apiKey: process.env.GEMINI_API_KEY,
+    apiKey: import.meta.env.VITE_GEMINI_API_KEY,
   });
 
   const sendPrompt = async (e) => {

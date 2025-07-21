@@ -33,17 +33,17 @@ function App() {
           return;
         }
         
-        const userResponse = await axios.get(`${server.prod}/api/v1/users/login`, {
+        const userResponse = await axios.get(`${server.dev}/api/v1/users/login`, {
           params: {token}
         })
 
-        const groupResponse = await axios.get(`${server.prod}/api/group`, {
+        const groupResponse = await axios.get(`${server.dev}/api/group`, {
           headers: {
             Authorization: token,
           },
         });
 
-        const chatResponse = await axios.get(`${server.prod}/api/chat`, {
+        const chatResponse = await axios.get(`${server.dev}/api/chat`, {
           headers: {
             Authorization: token,
           },

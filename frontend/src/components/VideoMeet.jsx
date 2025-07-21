@@ -16,7 +16,7 @@ import withAuth from "../utils/withAuth";
 import { AuthProvider } from "../contexts/AuthContext";
 import server from "../environment";
 
-const server_url = server.prod;
+const server_url = server.dev;
 
 var connections = {};
 
@@ -70,7 +70,7 @@ const VideoMeetComponent = () => {
         audio: true,
       });
 
-      if (videoPermission) {
+      if (audioPermission) {
         setAudioAvailable(true);
       } else {
         setAudioAvailable(false);
@@ -147,7 +147,7 @@ const VideoMeetComponent = () => {
 
           // Black Silence
           let blackSilence = (...args) =>
-            new MediaStream([black(...args), silence(...args)]);
+            new MediaStream([black(...args), silence()]);
           window.localStream = blackSilence();
           localVideoRef.current.srcObject = window.localStream;
 
@@ -160,7 +160,7 @@ const VideoMeetComponent = () => {
                   socketRef.current.emit(
                     "signal",
                     id,
-                    JSON.stringify({ sdp: connections[id].localDescription })
+                    JSON.stringify({ 'sdp': connections[id].localDescription })
                   );
                 })
                 .catch((e) => console.log(e));
@@ -184,7 +184,7 @@ const VideoMeetComponent = () => {
   let black = ({ width = 640, height = 480 } = {}) => {
     let canvas = Object.assign(
       document.createElement("canvas"),
-      (width, height)
+      {width, height}
     );
 
     canvas.getContext("2d").fillRect(0, 0, width, height);
@@ -233,7 +233,7 @@ const VideoMeetComponent = () => {
                         "signal",
                         fromId,
                         JSON.stringify({
-                          sdp: connections[fromId].localDescription,
+                          'sdp': connections[fromId].localDescription,
                         })
                       );
                     })
@@ -281,19 +281,23 @@ const VideoMeetComponent = () => {
         setVideos((videos) => videos.filter((video) => video.socketId !== id));
       });
 
-      socketRef.current.on("user-joined", (id, clients, name) => {
-        console.log(name)
-        clients.forEach((socketListId) => {
+      socketRef.current.on("user-joined", (id, clients) => {
+console.log("user joined", id, clients);
+        // 
+        clients.forEach((client) => {
+          const socketListId = client.socketId;
+  const name = client.name;
           connections[socketListId] = new RTCPeerConnection(
             peerConfigConnections
           );
-
+console.log(id, clients,name)
           connections[socketListId].onicecandidate = (event) => {
             if (event.candidate !== null) {
+              console.log("check 1")
               socketRef.current.emit(
                 "signal",
                 socketListId,
-                JSON.stringify({ ice: event.candidate })
+                JSON.stringify({ 'ice': event.candidate })
               );
             }
           };
@@ -303,18 +307,19 @@ const VideoMeetComponent = () => {
               (video) => video.socketId === socketListId
             );
 
-            if (videoExists) {
+            if (videoExists) {console.log("check 12")
               setVideos((videos) => {
                 const updatedVideos = videos.map((video) =>
                   video.socketId === socketListId
                     ? { ...video, stream: event.stream , username: name}
                     : video
                 );
-
+                console.log("updating new video:");
                 videoRef.current = updatedVideos;
+                console.log(updatedVideos)
                 return updatedVideos;
               });
-            } else {
+            } else {console.log("check 12")
               let newVideo = {
                 socketId: socketListId,
                 stream: event.stream,
@@ -324,8 +329,10 @@ const VideoMeetComponent = () => {
               };
 
               setVideos((videos) => {
+                console.log("Adding new video:", newVideo);
                 const updatedVideos = [...videos, newVideo];
                 videoRef.current = updatedVideos;
+                console.log(updatedVideos)
                 return updatedVideos;
               });
             }
@@ -333,12 +340,14 @@ const VideoMeetComponent = () => {
 
           if (window.localStream !== undefined && window.localStream !== null) {
             connections[socketListId].addStream(window.localStream);
+            console.log("check 1")
           } else {
             let blackSilence = (...args) =>
-              new MediaStream([black(...args), silence(...args)]);
+              new MediaStream([black(...args), silence()]);
 
             window.localStream = blackSilence();
             connections[socketListId].addStream(window.localStream);
+            console.log("check 1")
           }
         });
 
@@ -357,7 +366,7 @@ const VideoMeetComponent = () => {
                   socketRef.current.emit(
                     "signal",
                     id2,
-                    JSON.stringify({ sdp: connections[id2].localDescription })
+                    JSON.stringify({ 'sdp': connections[id2].localDescription })
                   );
                 })
                 .catch((err) => console.log(err));
@@ -429,7 +438,7 @@ const VideoMeetComponent = () => {
             socketRef.current.emit(
               "signal",
               id,
-              JSON.stringify({ sdp: connections[id].localDescription })
+              JSON.stringify({ 'sdp': connections[id].localDescription })
             );
           })
           .catch((e) => console.log(e));
@@ -450,7 +459,7 @@ const VideoMeetComponent = () => {
 
           // Black Silence
           let blackSilence = (...args) =>
-            new MediaStream([black(...args), silence(...args)]);
+            new MediaStream([black(...args), silence()]);
           window.localStream = blackSilence();
           localVideoRef.current.srcObject = window.localStream;
 
@@ -587,6 +596,7 @@ const VideoMeetComponent = () => {
                 <div className="bg-gray-900 max-w-[75vw] max-h-[75vh] m-2 min-w-[40vw] min-h-[25vw] h-full w-full"></div>
                 <div className="bg-gray-900 max-w-[75vw] max-h-[75vh] m-2 min-w-[40vw] min-h-[25vw] h-full w-full"></div>
                 <div className="bg-gray-900  max-w-[75vw] max-h-[75vh] m-4 min-w-[40vw] min-h-[25vh] h-full w-full"></div> */}
+        {console.log(videos)}
               {videos.map((video) => (
                 <div key={video.socketId}>
                   <video

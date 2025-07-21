@@ -40,7 +40,7 @@ const MeetingWindow = () => {
         </div>
       </div>
 
-      <div className="h-[130vh] w-full flex not-sm:flex-col-reverse pb-40 pt-20 sm:items-center justify-center ">
+      <div className="h-[130vh] w-full flex not-sm:flex-col-reverse pb-40  sm:items-center justify-center ">
         <div className="w-1/2 not-sm:w-full not-sm:flex not-sm:flex-col items-center justify-center ">
           <h2 className="m-4 text-3xl flex not-sm:text-center">
             Providing Quality Video Call like Quality Education

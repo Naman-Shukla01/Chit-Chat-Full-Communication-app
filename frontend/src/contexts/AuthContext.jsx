@@ -12,7 +12,7 @@ import server from "../environment";
 export const AuthContext = createContext();
 
 const client = axios.create({
-  baseURL: `${server.prod}/api/v1/users`,
+  baseURL: `${server.dev}/api/v1/users`,
 });
 
 export const AuthProvider = ({ children }) => {
@@ -47,9 +47,11 @@ export const AuthProvider = ({ children }) => {
 
       if (request.status === httpStatus.OK) {
          localStorage.setItem("token", request.data.token);
+         console.log(request.data)
         setUserData({_id: request.data._id, name: request.data.name, username: request.data.username})
-        router("/home")
+        
       }
+      router("/home")
     } catch (err) {
       throw err;
     }

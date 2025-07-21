@@ -14,7 +14,7 @@ const AuthPage = () => {
   const navigate = useNavigate();
 
   const { handleRegister, handleLogin, userData, setUserData } = useContext(AuthContext);
-  console.log(userData)
+
   if(userData) {
     navigate("/home");
   }
@@ -93,7 +93,7 @@ const AuthPage = () => {
                 >
                   <input
                     type="text"
-                    placeholder="username"
+                    placeholder="Enter your username"
                     className="text-sm p-1 border-2 rounded-lg border-gray-300"
                     name="username"
                     required
@@ -103,7 +103,7 @@ const AuthPage = () => {
                   <br />
                   <input
                     type="password"
-                    placeholder="Password"
+                    placeholder="Enter your password"
                     className="text-sm p-1 rounded-lg border-2 border-gray-300"
                     name="password"
                     required
@@ -127,7 +127,7 @@ const AuthPage = () => {
                 >
                   <input
                     type="text"
-                    placeholder="Username"
+                    placeholder="Enter your name"
                     name="name"
                     className="text-sm p-1 rounded-lg border-2 border-gray-300"
                     required
@@ -137,7 +137,7 @@ const AuthPage = () => {
                   <br />
                   <input
                     type="text"
-                    placeholder="username"
+                    placeholder="Enter your username"
                     className="text-sm p-1 rounded-lg border-2 border-gray-300"
                     name="username"
                     required
@@ -147,7 +147,7 @@ const AuthPage = () => {
                   <br />
                   <input
                     type="password"
-                    placeholder="Password"
+                    placeholder="Enter your password"
                     name="password"
                     className="text-sm p-1 rounded-lg border-2 border-gray-300"
                     required

@@ -24,7 +24,7 @@ const ChatTab = ({
     try{
         e.preventDefault();
 
-    const res = await axios.post(`${server.prod}/api/chat/create`, {
+    const res = await axios.post(`${server.dev}/api/chat/create`, {
       username: e.target.name.value,
       senderId: user._id,
     });
@@ -42,7 +42,7 @@ const ChatTab = ({
   const createGroup = async (e) => {
     e.preventDefault();
     console.log(user);
-    const res = await axios.post(`${server.prod}/api/group/create`, {
+    const res = await axios.post(`${server.dev}/api/group/create`, {
       name: e.target.name.value,
       password: e.target.password.value,
       userId: user._id,
@@ -55,7 +55,7 @@ const ChatTab = ({
   const joinGroup = async (e) => {
     e.preventDefault();
 
-    const res = await axios.post(`${server.prod}/api/group/join`, {
+    const res = await axios.post(`${server.dev}/api/group/join`, {
       name: e.target.name.value,
       password: e.target.password.value,
       userId: user._id,
@@ -131,7 +131,7 @@ const ChatTab = ({
       </div>
       {showOptions && (
         <div className="fixed inset-0 bg-black/50 w-full h-full z-10 flex justify-center ">
-          <div className="fixed p-8 border-2 border-[#fcd1a0] flex flex-col bg-[#FAECDC] z-10  mt-12 not-sm:p-4 rounded-2xl">
+          <div className="fixed p-8 border-2 border-[#fcd1a0] flex flex-col bg-[#FAECDC] z-10  mt-12  rounded-2xl">
             <div className="flex flex-row justify-between">
               <div className="text-2xl pb-8">New Chat</div>
 
@@ -151,13 +151,13 @@ const ChatTab = ({
                 setJoinGroupClicked(false);
                 setShowOptions(false);
               }}
-              className="mt-4  flex hover:bg-yellow-100 rounded-2xl"
+              className="mt-4  flex hover:bg-[#f8b6707e] rounded-2xl"
             >
               <img src="/user-add-icon.svg" alt="" />
               <div className="text-lg font-semibold m-2">Create chat</div>
             </div>
             <div
-              className="  flex hover:bg-yellow-100 rounded-2xl"
+              className="  flex hover:bg-[#f8b6707e] rounded-2xl"
               onClick={() => {
                 setCreateGroupClicked(!createGroupClicked);
                 setJoinGroupClicked(false);
@@ -169,7 +169,7 @@ const ChatTab = ({
               <p className="text-lg font-semibold p-2">Create Group</p>
             </div>
             <div
-              className="flex hover:bg-yellow-100 rounded-2xl"
+              className="flex hover:bg-[#f8b6707e] rounded-2xl items-center "
               onClick={() => {
                 setJoinGroupClicked(!joinGroupClicked);
                 setCreateChatClicked(false);
@@ -177,8 +177,8 @@ const ChatTab = ({
                 setShowOptions(false);
               }}
             >
-              <img src="/join-icon.svg" alt="" />
-              <p className="text-lg font-semibold p-2"> Join Group</p>
+              <img src="/join-icon.svg" alt="" className="h-5 w-5 "/>
+              <p className="text-lg font-semibold p-2">   Join Group</p>
             </div>
           </div>
         </div>
@@ -186,7 +186,7 @@ const ChatTab = ({
       {joinGroupClicked && (
         <div className="fixed inset-0 bg-black/50 w-full h-full z-10 flex justify-center  ">
           <form
-            className="fixed p-8 border-2 border-[#fcd1a0] flex flex-col bg-[#FAECDC] z-10  mt-12 not-sm:p-1 rounded-2xl"
+            className="fixed p-8 border-2 border-[#fcd1a0] flex flex-col bg-[#FAECDC] z-10  mt-12  rounded-2xl"
             action=""
             onSubmit={joinGroup}
           >
@@ -229,7 +229,7 @@ const ChatTab = ({
       {createChatClicked && (
         <div className="fixed inset-0 bg-black/50 w-full h-full z-10 flex justify-center  ">
           <form
-            className="fixed p-8 border-2 border-[#fcd1a0] flex flex-col bg-[#FAECDC] z-10  mt-12 not-sm:p-1 rounded-2xl"
+            className="fixed p-8 border-2 border-[#fcd1a0] flex flex-col bg-[#FAECDC] z-10  mt-12  rounded-2xl"
             action=""
             onSubmit={createChat}
           >

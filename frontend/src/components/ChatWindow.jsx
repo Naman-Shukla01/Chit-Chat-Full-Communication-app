@@ -91,7 +91,7 @@ const ChatWindow = ({
         name="message"
         placeholder="Type your message"
         value={message}
-        onChange={handleChange}
+        onChange={(e)=>setMessage(e.target.value)}
         className="p-2 text-sm border-2 not-sm:w-full w-[40vw] border-[#F7B264] rounded-full bg-white mr-2"
       />
       <button type="submit" className="text-xl bg-[#F7B264] text-white rounded-full px-4 py-2">
