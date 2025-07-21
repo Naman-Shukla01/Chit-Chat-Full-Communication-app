@@ -281,12 +281,10 @@ const VideoMeetComponent = () => {
         setVideos((videos) => videos.filter((video) => video.socketId !== id));
       });
 
-      socketRef.current.on("user-joined", (id, clients) => {
-console.log("user joined", id, clients);
+      socketRef.current.on("user-joined", (id, clients, name) => {
+
         // 
-        clients.forEach((client) => {
-          const socketListId = client.socketId;
-  const name = client.name;
+        clients.forEach((socketListId) => {
           connections[socketListId] = new RTCPeerConnection(
             peerConfigConnections
           );
