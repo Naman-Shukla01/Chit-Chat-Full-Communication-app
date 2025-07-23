@@ -24,7 +24,7 @@ const ChatTab = ({
     try{
         e.preventDefault();
 
-    const res = await axios.post(`${server.dev}/api/chat/create`, {
+    const res = await axios.post(`${server.prod}/api/chat/create`, {
       username: e.target.name.value,
       senderId: user._id,
     });
@@ -42,7 +42,7 @@ const ChatTab = ({
   const createGroup = async (e) => {
     e.preventDefault();
     console.log(user);
-    const res = await axios.post(`${server.dev}/api/group/create`, {
+    const res = await axios.post(`${server.prod}/api/group/create`, {
       name: e.target.name.value,
       password: e.target.password.value,
       userId: user._id,
@@ -55,7 +55,7 @@ const ChatTab = ({
   const joinGroup = async (e) => {
     e.preventDefault();
 
-    const res = await axios.post(`${server.dev}/api/group/join`, {
+    const res = await axios.post(`${server.prod}/api/group/join`, {
       name: e.target.name.value,
       password: e.target.password.value,
       userId: user._id,
@@ -82,68 +82,22 @@ const ChatTab = ({
             alt=""
           />
         </div>
-        {createGroupClicked && (
-          <div className="fixed inset-0 bg-black/50 w-full h-full z-10 flex justify-center  ">
-            <form
-              className="fixed p-8 border-2 border-[#fcd1a0] flex flex-col bg-[#FAECDC] z-10  mt-12 not-sm:p-1 rounded-2xl"
-              action=""
-              onSubmit={createGroup}
-            >
-              <div className="flex flex-row justify-between">
-                <label
-                  htmlFor=""
-                  className="text-2xl font-bold text-center pb-8"
-                >
-                  Create New Group
-                </label>
-                <div onClick={() => setCreateGroupClicked(false)}>
-                  <img
-                    className="font-extrabold"
-                    src="/cancel-icon.svg"
-                    alt=""
-                  />
-                </div>
-              </div>
-
-              <input
-                className="p-1.5 text-xl border-b-4 border-orange-300 rounded-lg bg-white mr-2"
-                type="text"
-                name="name"
-                required
-                placeholder="Enter Group name"
-              />
-              <br />
-              <input
-                className="p-1.5 text-xl border-b-4 border-orange-300 rounded-lg bg-white mr-2"
-                type="password"
-                name="password"
-                placeholder="Enter password"
-                required
-              />
-              <br />
-              <button className="p-1.5 not-sm:p-1 not-sm:text-xl text-2xl text-white bg-[#f8b6707e] border-2 border-orange-400 hover:scale-[95%] hover:text-[#f8b6707e] hover:bg-white  transition-transform rounded-xl">
-                Create
-              </button>
-            </form>
-            
-          </div>
-        )}
       </div>
       {showOptions && (
         <div className="fixed inset-0 bg-black/50 w-full h-full z-10 flex justify-center ">
-          <div className="fixed p-8 border-2 border-[#fcd1a0] flex flex-col bg-[#FAECDC] z-10  mt-12  rounded-2xl">
-            <div className="flex flex-row justify-between">
-              <div className="text-2xl pb-8">New Chat</div>
+          <div className="fixed p-8   flex flex-col bg-white z-10  mt-12  rounded-2xl">
+            <div className="flex flex-row justify-between items-center pb-4">
+              <div className="text-2xl ">New Chat</div>
 
               <div onClick={() => setShowOptions(false)}>
                 <img className="font-extrabold" src="/cancel-icon.svg" alt="" />
               </div>
             </div>
-            <input
+            {/* <input
               type="text"
               className="rounded-xl border-b-orange-300 text-lg bg-white h-12 border-b-4 border-gray-200"
               placeholder="  Enter username "
-            />
+            /> */}
             <div
               onClick={() => {
                 setCreateChatClicked(!createChatClicked);
@@ -151,25 +105,25 @@ const ChatTab = ({
                 setJoinGroupClicked(false);
                 setShowOptions(false);
               }}
-              className="mt-4  flex hover:bg-[#f8b6707e] rounded-2xl"
-            >
+              className="flex hover:bg-[#f8b6707e] rounded-2xl p-2 space-x-2"
+              >
               <img src="/user-add-icon.svg" alt="" />
-              <div className="text-lg font-semibold m-2">Create chat</div>
+              <div className="text-lg font-semibold ">Create Chat</div>
             </div>
             <div
-              className="  flex hover:bg-[#f8b6707e] rounded-2xl"
+              className="p-2 flex hover:bg-[#f8b6707e] rounded-2xl space-x-2"
               onClick={() => {
                 setCreateGroupClicked(!createGroupClicked);
                 setJoinGroupClicked(false);
                 setCreateChatClicked(false);
                 setShowOptions(false);
               }}
-            >
+              >
               <img src="/add-team-stroke-rounded.svg" alt="" />
-              <p className="text-lg font-semibold p-2">Create Group</p>
+              <p className="text-lg font-semibold">Create Group</p>
             </div>
             <div
-              className="flex hover:bg-[#f8b6707e] rounded-2xl items-center "
+              className="flex hover:bg-[#f8b6707e] rounded-2xl items-center p-2 space-x-2"
               onClick={() => {
                 setJoinGroupClicked(!joinGroupClicked);
                 setCreateChatClicked(false);
@@ -177,21 +131,67 @@ const ChatTab = ({
                 setShowOptions(false);
               }}
             >
-              <img src="/join-icon.svg" alt="" className="h-5 w-5 "/>
-              <p className="text-lg font-semibold p-2">   Join Group</p>
+              <img src="/join-icon.svg" alt="" className="h-5 w-6 "/>
+              <p className="text-lg font-semibold ">   Join Group</p>
             </div>
           </div>
         </div>
       )}
+          {createGroupClicked && (
+            <div className="fixed inset-0 bg-black/50 w-full h-full z-10 flex justify-center  ">
+              <form
+                className="fixed p-8  flex flex-col bg-white z-10  mt-12 rounded-2xl"
+                action=""
+                onSubmit={createGroup}
+              >
+                <div className="flex flex-row justify-between pb-8 items-center space-x-1">
+                  <label
+                    htmlFor=""
+                    className="text-2xl font-bold text-center"
+                  >
+                    Create New Group
+                  </label>
+                  <div onClick={() => setCreateGroupClicked(false)}>
+                    <img
+                      className="font-extrabold"
+                      src="/cancel-icon.svg"
+                      alt=""
+                    />
+                  </div>
+                </div>
+  
+                <input
+                  className="p-1.5  text-xl border-b-4 border-orange-300 rounded-lg bg-white mr-2"
+                  type="text"
+                  name="name"
+                  required
+                  placeholder="Enter Group name"
+                />
+                <br />
+                <input
+                  className="p-1.5 text-xl border-b-4 border-orange-300 rounded-lg bg-white mr-2"
+                  type="password"
+                  name="password"
+                  placeholder="Enter password"
+                  required
+                />
+                <br />
+                <button className="p-1.5 not-sm:p-1 not-sm:text-xl text-2xl text-white bg-orange-400 border-2 border-orange-400 hover:scale-[95%] hover:text-orange-400 hover:bg-white  transition-transform rounded-xl">
+                  Create
+                </button>
+              </form>
+              
+            </div>
+          )}
       {joinGroupClicked && (
         <div className="fixed inset-0 bg-black/50 w-full h-full z-10 flex justify-center  ">
           <form
-            className="fixed p-8 border-2 border-[#fcd1a0] flex flex-col bg-[#FAECDC] z-10  mt-12  rounded-2xl"
+            className="fixed p-8 flex flex-col bg-white z-10  mt-12  rounded-2xl"
             action=""
             onSubmit={joinGroup}
           >
-            <div className="flex flex-row justify-between">
-              <label htmlFor="" className="text-2xl font-bold text-center pb-8">
+            <div className="flex flex-row justify-between pb-8 items-center">
+              <label htmlFor="" className="text-2xl font-bold text-center ">
                 Join Group
               </label>
               <div
@@ -204,7 +204,7 @@ const ChatTab = ({
             </div>
 
             <input
-              className="p-1.5 text-xl border-b-4 border-orange-300 rounded-lg bg-white mr-2"
+              className="p-1.5 w-48 text-xl border-b-4 border-orange-300 rounded-lg bg-white "
               type="text"
               name="name"
               required
@@ -212,7 +212,7 @@ const ChatTab = ({
             />
             <br />
             <input
-              className="p-1.5 text-xl border-b-4 border-orange-300 rounded-lg bg-white mr-2"
+              className="p-1.5 w-48 text-xl border-b-4 border-orange-300 rounded-lg bg-white "
               type="password"
               name="password"
               placeholder="Enter password"
@@ -229,12 +229,12 @@ const ChatTab = ({
       {createChatClicked && (
         <div className="fixed inset-0 bg-black/50 w-full h-full z-10 flex justify-center  ">
           <form
-            className="fixed p-8 border-2 border-[#fcd1a0] flex flex-col bg-[#FAECDC] z-10  mt-12  rounded-2xl"
+            className="fixed p-8 flex flex-col bg-white z-10  mt-12  rounded-2xl"
             action=""
             onSubmit={createChat}
           >
-            <div className="flex flex-row justify-between">
-              <label htmlFor="" className="text-2xl font-bold text-center pb-8">
+            <div className="flex flex-row justify-between pb-8 items-center">
+              <label htmlFor="" className="text-2xl font-bold text-center ">
                 Create Chat
               </label>
               <div onClick={() => setCreateChatClicked(!createChatClicked)}>
@@ -243,7 +243,7 @@ const ChatTab = ({
             </div>
 
             <input
-              className="p-1.5 text-xl border-b-4 border-orange-300 rounded-lg bg-white mr-2"
+              className="p-1.5 w-48 text-xl border-b-4 border-orange-300 rounded-lg bg-white "
               type="text"
               name="name"
               required

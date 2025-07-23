@@ -20,9 +20,9 @@ const MeetingWindow = () => {
   return (
     <div
       className="relative w-full 
-     sm:ml-20 "
+     sm:ml-20  bg-[#FAECDC]"
     >
-      <div className=" flex items-center justify-between top-0 sticky bg-[#FAECDC] w-full z-10 p-4">
+      <div className=" flex items-center justify-between top-0 sticky bg-[#FAECDC] w-full p-4">
         <div className="flex items-center ">
           <h2 className="text-3xl not-sm:text-xl font-bold">Chit Chat</h2>
         </div>
@@ -40,9 +40,9 @@ const MeetingWindow = () => {
         </div>
       </div>
 
-      <div className="h-[130vh] w-full flex not-sm:flex-col-reverse pb-40  sm:items-center justify-center ">
+      <div className="h-[100vh] w-full flex not-sm:flex-col-reverse pb-40  sm:items-center justify-center ">
         <div className="w-1/2 not-sm:w-full not-sm:flex not-sm:flex-col items-center justify-center ">
-          <h2 className="m-4 text-3xl flex not-sm:text-center">
+          <h2 className="m-4 font-semibold text-3xl not-sm:text-xl flex not-sm:text-center">
             Providing Quality Video Call like Quality Education
           </h2>
 
@@ -66,20 +66,20 @@ const MeetingWindow = () => {
           </div>
           
         </div>
-        <div className="min-h-fit min-w-fit not-sm:w-full flex not-sm:justify-center items-center">
-          <img src="/Group-video.svg" alt="" className="h-[50vh] w-[50vw] " />
+        <div className="min-h-fit min-w-fit not-sm:w-full flex not-sm:justify-center mt-8 items-center">
+          <img src="/Group-video.svg" alt="" className="h-fit w-[40vw] not-sm:h-fit not-sm:w-[70vw]" />
         </div>
       </div>
 
       {buttonClicked === "join" ? (
         <div className="fixed inset-0 bg-black/50 w-full h-full z-10 flex justify-center  ">
           <form
-            className="fixed p-8  flex flex-col bg-white z-10  mt-12 not-sm:p-1 rounded-2xl"
+            className=" fixed p-8  flex flex-col bg-white z-10  mt-12  rounded-2xl"
             action=""
             onSubmit={handleJoinVideoCall}
           >
-            <div className="flex flex-row justify-between">
-              <label htmlFor="" className="text-2xl font-bold text-center pb-8">
+            <div className="flex flex-row justify-between w-full pb-8 items-center">
+              <label htmlFor="" className="text-2xl font-bold text-center">
                 Join Meeting
               </label>
               <div
@@ -92,7 +92,7 @@ const MeetingWindow = () => {
             </div>
 
             <input
-              className="p-1.5 text-xl border-b-4 border-orange-300 rounded-lg bg-white mr-2"
+              className="p-1.5 text-xl border-b-4 border-[#F7B264] rounded-lg bg-white mr-2"
               type="text"
               name="groupCode"
               value={meetingCode}
