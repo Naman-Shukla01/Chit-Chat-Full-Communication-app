@@ -282,96 +282,94 @@ const VideoMeetComponent = () => {
       });
 
       socketRef.current.on("user-joined", (id, clients, name) => {
+  clients.forEach((socketListId) => {
+    // Avoid recreating connection if already exists
+    if (connections[socketListId]) return;
 
-        // 
-        clients.forEach((socketListId) => {
-          connections[socketListId] = new RTCPeerConnection(
-            peerConfigConnections
+    // Create new RTCPeerConnection
+    const peerConnection = new RTCPeerConnection(peerConfigConnections);
+    connections[socketListId] = peerConnection;
+
+    // Handle ICE candidates
+    peerConnection.onicecandidate = (event) => {
+      if (event.candidate) {
+        socketRef.current.emit(
+          "signal",
+          socketListId,
+          JSON.stringify({ ice: event.candidate })
+        );
+      }
+    };
+
+    // Handle remote stream
+    peerConnection.ontrack = (event) => {
+      const videoExists = videoRef.current.find(
+        (video) => video.socketId === socketListId
+      );
+
+      if (videoExists) {
+        setVideos((videos) => {
+          const updatedVideos = videos.map((video) =>
+            video.socketId === socketListId
+              ? { ...video, stream: event.streams[0], username: name }
+              : video
           );
-console.log(id, clients,name)
-          connections[socketListId].onicecandidate = (event) => {
-            if (event.candidate !== null) {
-              console.log("check 1")
-              socketRef.current.emit(
-                "signal",
-                socketListId,
-                JSON.stringify({ 'ice': event.candidate })
-              );
-            }
-          };
-
-          connections[socketListId].onaddstream = (event) => {
-            let videoExists = videoRef.current.find(
-              (video) => video.socketId === socketListId
-            );
-
-            if (videoExists) {console.log("check 12")
-              setVideos((videos) => {
-                const updatedVideos = videos.map((video) =>
-                  video.socketId === socketListId
-                    ? { ...video, stream: event.stream , username: name}
-                    : video
-                );
-                console.log("updating new video:");
-                videoRef.current = updatedVideos;
-                console.log(updatedVideos)
-                return updatedVideos;
-              });
-            } else {console.log("check 12")
-              let newVideo = {
-                socketId: socketListId,
-                stream: event.stream,
-                autoPlay: true,
-                playsInline: true,
-                username: name,
-              };
-
-              setVideos((videos) => {
-                console.log("Adding new video:", newVideo);
-                const updatedVideos = [...videos, newVideo];
-                videoRef.current = updatedVideos;
-                console.log(updatedVideos)
-                return updatedVideos;
-              });
-            }
-          };
-
-          if (window.localStream !== undefined && window.localStream !== null) {
-            connections[socketListId].addStream(window.localStream);
-            console.log("check 1")
-          } else {
-            let blackSilence = (...args) =>
-              new MediaStream([black(...args), silence()]);
-
-            window.localStream = blackSilence();
-            connections[socketListId].addStream(window.localStream);
-            console.log("check 1")
-          }
+          videoRef.current = updatedVideos;
+          return updatedVideos;
         });
+      } else {
+        const newVideo = {
+          socketId: socketListId,
+          stream: event.streams[0],
+          autoPlay: true,
+          playsInline: true,
+          username: name,
+        };
+        setVideos((videos) => {
+          const updatedVideos = [...videos, newVideo];
+          videoRef.current = updatedVideos;
+          return updatedVideos;
+        });
+      }
+    };
 
-        if (id === socketIdRef.current) {
-          for (let id2 in connections) {
-            if (id2 === socketIdRef.current) continue;
-
-            try {
-              connections[id2].addStream(window.localStream);
-            } catch (err) {}
-
-            connections[id2].createOffer().then((description) => {
-              connections[id2]
-                .setLocalDescription(description)
-                .then(() => {
-                  socketRef.current.emit(
-                    "signal",
-                    id2,
-                    JSON.stringify({ 'sdp': connections[id2].localDescription })
-                  );
-                })
-                .catch((err) => console.log(err));
-            });
-          }
-        }
+    // Add local tracks (use addTrack instead of deprecated addStream)
+    if (window.localStream) {
+      window.localStream.getTracks().forEach((track) => {
+        peerConnection.addTrack(track, window.localStream);
       });
+    } else {
+      const blackSilence = (...args) =>
+        new MediaStream([black(...args), silence()]);
+      window.localStream = blackSilence();
+      window.localStream.getTracks().forEach((track) => {
+        peerConnection.addTrack(track, window.localStream);
+      });
+    }
+  });
+
+  // Only current user should initiate offers to others
+  if (id === socketIdRef.current) {
+    clients.forEach((socketListId) => {
+      if (socketListId === socketIdRef.current) return;
+
+      const peerConnection = connections[socketListId];
+
+      peerConnection
+        .createOffer()
+        .then((description) => peerConnection.setLocalDescription(description))
+        .then(() => {
+          socketRef.current.emit(
+            "signal",
+            socketListId,
+            JSON.stringify({ sdp: peerConnection.localDescription })
+          );
+        })
+        .catch((err) => console.log(err));
+    });
+  }
+});
+
     });
   };
   let getMedia = () => {
@@ -555,19 +553,16 @@ console.log(id, clients,name)
                 <div className="chattingArea">
                   <form onSubmit={sendMessage} className="flex p-4 ">
                     <input
-                      type="text"
-                      name="message"
-                      placeholder="Type your message"
-                      value={message}
-                      onChange={(e) => setMessage(e.target.value)}
-                      className="p-2 text-xl border-4 w-full border-orange-200 rounded-lg bg-white mr-2"
-                    />
-                    <button
-                      type="submit"
-                      className="text-xl bg-orange-400 text-white rounded px-4 py-2"
-                    >
-                      <img src="/sent-icon.svg" alt="" />
-                    </button>{" "}
+        type="text"
+        name="message"
+        placeholder="Type your message"
+        value={message}
+        onChange={(e)=>setMessage(e.target.value)}
+        className="p-2 text-sm border-2 not-sm:w-full w-[40vw] border-[#F7B264] rounded-full bg-white mr-2"
+      />
+      <button type="submit" className="text-xl bg-[#F7B264] text-white rounded-full px-4 py-2">
+        <img src="/sent-icon.svg" alt="Send" />
+      </button>{" "}
                   </form>
                 </div>
               </div>
