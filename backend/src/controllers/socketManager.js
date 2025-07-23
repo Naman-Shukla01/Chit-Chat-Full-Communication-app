@@ -10,99 +10,89 @@ export const connectToSocket = (server) => {
     cors: {
       origin: "*",
       methods: ["GET", "POST"],
-      allowedHeaders: ["*"],
-      credentials: true,
-    },
+      allowedHeaders: ['*'],
+      credentials: true
+    }
   });
 
   io.on("connection", (socket) => {
-    // Group chat
-    socket.on("join-group", async ({ groupId, password }) => {
-      try {
-        const allMessages = await Message.find({ group: groupId }).populate("sender", "username");
-        socket.join(groupId);
-        socket.emit("receive-message", allMessages);
-      } catch (err) {
-        console.error("join-group error:", err);
-      }
-    });
 
-    // One-on-one chat
+    //Chat
+    socket.on("join-group", async ({groupId, password})=>{
+        let allMessage = await Message.find({group: groupId}).populate("sender","username")
+        socket.join(groupId);
+        socket.emit("receive-message", allMessage)
+    })
+
     socket.on("join-chat", async ({ senderId, receiverId }) => {
-      try {
+        
+    try {
         const sentMessages = await Message.find({ sender: senderId, receiver: receiverId })
-          .populate("receiver", "username")
-          .populate("sender", "username");
+            .populate("receiver", "username")
+            .populate("sender", "username");
 
         const receivedMessages = await Message.find({ sender: receiverId, receiver: senderId })
-          .populate("sender", "username")
-          .populate("receiver", "username");
-
+            .populate("sender", "username")
+            .populate("receiver", "username");
+        
+        
         const allMessages = [...sentMessages, ...receivedMessages];
+        
         allMessages.sort((a, b) => new Date(a.sentAt) - new Date(b.sentAt));
 
-        const roomId = [senderId, receiverId].sort().join("-");
+        const roomId = [senderId, receiverId].sort().join("-"); 
         socket.join(roomId);
+
         socket.emit("receive-message", allMessages);
-      } catch (error) {
-        console.error("join-chat error:", error);
-      }
-    });
+    } catch (error) {
+        console.error("Error joining chat:", error);
+    }
+});
 
-    // Group message
-    socket.on("send-message", async ({ sender, message, groupId }) => {
-      try {
-        const newMessage = new Message({ sender, group: groupId, content: message });
+
+    socket.on("send-message", async ({sender, message, groupId})=>{
+        let newMessage = new Message({sender: sender, group: groupId, content: message})
         await newMessage.save();
-        await newMessage.populate("sender");
-
+        await newMessage.populate("sender")
+       
         io.to(groupId).emit("receive-message", newMessage);
-      } catch (err) {
-        console.error("send-message error:", err);
-      }
-    });
+    })
+    
 
-    // Private message
-    socket.on("send-personal-message", async ({ sender, message, receiver }) => {
-      try {
-        const newMessage = new Message({ sender, receiver, content: message });
+    socket.on("send-personal-message", async ({sender, message, receiver})=>{
+        let newMessage = new Message({sender: sender, receiver: receiver, content: message})
+        console.log(sender, receiver)
         await newMessage.save();
-        await newMessage.populate("sender");
-
-        const roomId = [sender, receiver].sort().join("-");
-
-        // Avoid rejoining if already in room
-        const rooms = Array.from(socket.rooms || []);
-        if (!rooms.includes(roomId)) {
-          socket.join(roomId);
-        }
-
+        await newMessage.populate("sender")
+        
+         const roomId = [sender, receiver].sort().join("-"); 
+        socket.join(roomId);
         io.to(roomId).emit("receive-message", newMessage);
-      } catch (err) {
-        console.error("send-personal-message error:", err);
-      }
-    });
+    })
 
-    // Video meeting (call)
-    socket.on("join-call", (path, username) => {
-      if (!connections[path]) {
+
+    //Meeting
+    socket.on("join-call", (path) => {
+      socket.join(path);
+      if (connections[path] === undefined) {
         connections[path] = [];
       }
-
       connections[path].push(socket.id);
+      console.log(connections[path])
+
       timeOnline[socket.id] = new Date();
 
-      connections[path].forEach((id) => {
-        io.to(id).emit("user-joined", socket.id, connections[path], username);
+      connections[path].forEach((element) => {
+        io.to(element).emit("user-joined", socket.id, connections[path]);
       });
 
-      if (messages[path]) {
-        messages[path].forEach((msg) => {
-          io.to(socket.id).emit(
+      if (messages[path] !== undefined) {
+        messages[path].forEach((element) => {
+          io.to().emit(
             "chat-message",
-            msg["data"],
-            msg["sender"],
-            msg["socket-id-sender"]
+            element["data"],
+            element["sender"],
+            element["socket-id-sender"] //because senders can have common name but socket id would be different for all of them
           );
         });
       }
@@ -113,58 +103,60 @@ export const connectToSocket = (server) => {
     });
 
     socket.on("chat-message", (data, sender) => {
-      let roomKey = "";
-      for (const [room, participants] of Object.entries(connections)) {
-        if (participants.includes(socket.id)) {
-          roomKey = room;
-          break;
-        }
-      }
+      const [matchingRoom, found] = Object.entries(connections).reduce(
+        ([room, isFound], [roomKey, roomValue]) => {
+          if (!isFound && roomValue.includes(socket.id)) {
+            return [roomKey, true];
+          }
 
-      if (roomKey) {
-        if (!messages[roomKey]) {
-          messages[roomKey] = [];
+          return [room, isFound];
+        },
+        ["", false]
+      );
+
+      if (found === true) {
+        if (messages[matchingRoom] === undefined) {
+          messages[matchingRoom] = [];
         }
 
-        messages[roomKey].push({
-          sender,
-          data,
+        messages[matchingRoom].push({
+          sender: sender,
+          data: data,
           "socket-id-sender": socket.id,
         });
+        console.log("message: ",matchingRoom, ":", sender, data);
 
-        connections[roomKey].forEach((id) => {
-          io.to(id).emit("chat-message", data, sender, socket.id);
+        connections[matchingRoom].forEach((element) => {
+          io.to(element).emit("chat-message", data, sender, socket.id);
         });
       }
     });
-
     socket.on("disconnect", () => {
+      let diffTIme = Math.abs(timeOnline[socket.id] - new Date());
+
       let key;
 
-      for (const [room, participants] of Object.entries(connections)) {
-        const index = participants.indexOf(socket.id);
-        if (index !== -1) {
-          key = room;
+      for (const [room, persons] of JSON.parse(
+        JSON.stringify(Object.entries(connections))
+      )) {
+        persons.forEach((id) => {
+          if (id === socket.id) {
+            key = room;
 
-          // Notify other users
-          connections[room].forEach((participantId) => {
-            if (participantId !== socket.id) {
+            connections[key].forEach((participantId) => {
               io.to(participantId).emit("user-left", socket.id);
+            });
+
+            let index = connections[key].indexOf(socket.id);
+
+            connections[key].splice(index, 1)
+
+            if(connections[key].length === 0){
+              delete connections[key];
             }
-          });
-
-          // Remove the disconnected user
-          connections[room].splice(index, 1);
-
-          if (connections[room].length === 0) {
-            delete connections[room];
           }
-
-          break;
-        }
+        });
       }
-
-      delete timeOnline[socket.id];
     });
   });
 
