@@ -595,7 +595,7 @@ const VideoMeetComponent = () => {
                     }}
                   ></video>
 
-                  <h2 className="text-white text-xl flex justify-end">{video.username}</h2>
+                  {/* <h2 className="text-white text-xl flex justify-end">{video.username}</h2> */}
                 </div>
               ))}
             </div>
