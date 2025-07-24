@@ -23,7 +23,7 @@ const ChatPage = ({
   console.log(user);
 
   useEffect(() => {
-    const newSocket = io(server.dev, {
+    const newSocket = io(server.prod, {
       transports: ["websocket"],
       withCredentials: true,
     });
