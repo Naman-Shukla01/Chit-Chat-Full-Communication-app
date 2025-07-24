@@ -24,7 +24,7 @@ const ChatTab = ({
     try{
         e.preventDefault();
 
-    const res = await axios.post(`${server.prod}/api/chat/create`, {
+    const res = await axios.post(`${server.dev}/api/chat/create`, {
       username: e.target.name.value,
       senderId: user._id,
     });
@@ -42,7 +42,7 @@ const ChatTab = ({
   const createGroup = async (e) => {
     e.preventDefault();
     console.log(user);
-    const res = await axios.post(`${server.prod}/api/group/create`, {
+    const res = await axios.post(`${server.dev}/api/group/create`, {
       name: e.target.name.value,
       password: e.target.password.value,
       userId: user._id,
@@ -55,7 +55,7 @@ const ChatTab = ({
   const joinGroup = async (e) => {
     e.preventDefault();
 
-    const res = await axios.post(`${server.prod}/api/group/join`, {
+    const res = await axios.post(`${server.dev}/api/group/join`, {
       name: e.target.name.value,
       password: e.target.password.value,
       userId: user._id,
@@ -66,9 +66,9 @@ const ChatTab = ({
   };
 
   return (
-    <div className=" sm:mt-2 sm:ml-14 rounded-2xl cursor-pointer p-5 not-sm:p-2 bg-[#f5d8b87e]  sm:w-[35vw] not-sm:w-[100vw] h-[100vh] ">
-      <div className="flex justify-between not-sm:m-4">
-        <h1 className="text-xl font-bold">Chit Chat</h1>
+    <div className=" sm:mt-2 sm:ml-14 rounded-2xl cursor-pointer p-5 bg-[#f5d8b87e]  sm:w-[35vw] not-sm:w-[100vw] h-[100vh]  not-sm:p-4">
+      <div className="flex justify-between">
+        <h1 className="text-2xl font-bold">Chit Chat</h1>
         <div>
           <img
             onClick={() => {
@@ -275,8 +275,8 @@ const ChatTab = ({
             <button
               className={
                 !chatIsOpen
-                  ? "border-b-4 border-orange-300 decoration-white font-semibold not-sm:text-lg md:text-xl"
-                  : "md:text-xl not-sm:text-lg  font-semibold"
+                  ? "border-b-4 border-orange-300 decoration-white font-semibold text-xl"
+                  : "text-xl font-semibold"
               }
               onClick={() => {
                 setChatIsOpen(false);

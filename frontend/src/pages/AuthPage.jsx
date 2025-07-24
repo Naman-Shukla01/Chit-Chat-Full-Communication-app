@@ -28,6 +28,7 @@ const AuthPage = () => {
       setMessage(result);
       setError("");
       setPassword("");
+      loginIsOpen(true);
       
     } catch (error) {
       console.log(error);
@@ -54,15 +55,15 @@ const AuthPage = () => {
       <div className="h-[80vh]  shadow-xl/20 m-6 not-sm:shadow-lg not-sm:m-0 not-sm:h-[70vh]  bg-white overflow-hidden drop-shadow-gray-800 rounded-lg p-6 not-sm:p-1 not-sm:grid-cols-1 grid grid-cols-2 items-center justify-center ">
         <div className="items-center justify-center">
           <div className="flex flex-col items-center justify-center">
-            <h1 className="text-6xl not-sm:text-xl py-4 not-sm:p-1">
+            <h1 className="text-6xl not-sm:text-2xl py-4 not-sm:p-1">
               Welcome!
             </h1>
             <div className="py-4 space-x-4 not-sm:p-1">
               <button
                 className={
                   loginIsOpen
-                    ? "underline decoration-orange-400 md:text-4xl"
-                    : "md:text-4xl"
+                    ? "underline decoration-[#F7B264] not-sm:text-xl sm:text-3xl"
+                    : " not-sm:text-xl sm:text-3xl"
                 }
                 onClick={() => {
                   setLoginIsOpen(true);
@@ -73,8 +74,8 @@ const AuthPage = () => {
               <button
                 className={
                   !loginIsOpen
-                    ? "underline decoration-orange-400 md:text-4xl"
-                    : "md:text-4xl"
+                    ? "underline decoration-[#F7B264] not-sm:text-xl sm:text-3xl"
+                    : "not-sm:text-xl sm:text-3xl"
                 }
                 onClick={() => {
                   setLoginIsOpen(false);
@@ -114,7 +115,7 @@ const AuthPage = () => {
                   <p className="text-red-500 font-bold">{error}</p> <br />
                   <button
                     type="submit"
-                    className="w-fit sm:px-2 text-white bg-orange-400 border-2 border-orange-400 hover:scale-[95%] hover:text-orange-400 hover:bg-white  transition-transform rounded-xl"
+                    className=" px-4 py-2  font-semibold text-lg text-white bg-[#F7B264] border-2 border-[#F7B264] hover:scale-[95%] hover:text-[#F7B264] hover:bg-white  transition-transform rounded-xl"
                   >
                     Login
                   </button>
@@ -159,7 +160,7 @@ const AuthPage = () => {
                     <br />
                   <button
                     type="submit"
-                    className="w-fit sm:px-2 text-white bg-orange-400 border-2 border-orange-400 hover:scale-[95%] hover:text-orange-400 hover:bg-white  transition-transform rounded-xl"
+                    className=" px-4 py-2 font-semibold text-lg text-white bg-[#F7B264] border-2 border-[#F7B264] hover:scale-[95%] hover:text-[#F7B264] hover:bg-white  transition-transform rounded-xl"
                   >
                     Signup
                   </button>
@@ -170,7 +171,7 @@ const AuthPage = () => {
         </div>
         <div>
           <img
-            src=".././images.jpeg"
+            src=".././auth.svg"
             alt=""
             className="not-sm:hidden h-full w-full object-cover"
           />

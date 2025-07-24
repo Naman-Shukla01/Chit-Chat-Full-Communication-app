@@ -27,7 +27,7 @@ const Sidebar = ({ showProfile, setShowProfile }) => {
         <img
           className={
             activeTab === "home"
-              ? "bg-[#FAECDC]  p-2 rounded-full w-10 h-10 cursor-pointer"
+              ? "bg-gray-300  p-2 rounded-full w-10 h-10 cursor-pointer"
               : "w-10 h-10 cursor-pointer"
           }
           onClick={() => {
@@ -41,7 +41,7 @@ const Sidebar = ({ showProfile, setShowProfile }) => {
         <img
           className={
             activeTab === "meeting"
-              ? "bg-[#FAECDC] p-2 rounded-full w-10 h-10 cursor-pointer"
+              ? "bg-gray-300 p-2 rounded-full w-10 h-10 cursor-pointer"
               : "w-10 h-10 cursor-pointer"
           }
           onClick={() => {
@@ -60,7 +60,7 @@ const Sidebar = ({ showProfile, setShowProfile }) => {
           autoPlay
           className={
             activeTab === "ai-chatbot"
-              ? "cursor-pointer ring-1 ring-[#FAECDC] rounded-full w-10 h-10"
+              ? "cursor-pointer ring-1 ring-gray-300 rounded-full w-10 h-10"
               : "cursor-pointer w-10 h-10"
           }
           onClick={() => {
@@ -72,9 +72,9 @@ const Sidebar = ({ showProfile, setShowProfile }) => {
 
       <img
         className={
-          "sm:h-10 sm:w-10 not-sm:hidden " +
+          "sm:h-10 sm:w-10 " +
           (showProfile
-            ? "cursor-pointer bg-[#FAECDC] p-2 rounded-full not-sm:inset-0 w-10 h-10"
+            ? "cursor-pointer bg-gray-300 p-2 rounded-full not-sm:inset-0 w-10 h-10"
             : "cursor-pointer w-10 h-10")
         }
         onClick={() => setShowProfile(!showProfile)}

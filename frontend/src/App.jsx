@@ -5,7 +5,7 @@ import LandingPage from "./pages/LandingPage";
 import AuthPage from "./pages/AuthPage";
 import { AuthContext} from "./contexts/AuthContext";
 import VideoMeetComponent from "./components/VideoMeet";
-import HomePage from "./pages/HomePage";
+import ChatPage from "./pages/ChatPage";
 import { HistoryProvider } from "./contexts/HistoryContext";
 import History from "./components/History";
 import server from "./environment";
@@ -26,24 +26,24 @@ function App() {
   useEffect(() => {
     const fetchData = async () => {
 
-      try {
+       try {
         const token = localStorage.getItem("token");
         if (!token) {
           setLoading(false);
           return;
         }
         
-        const userResponse = await axios.get(`${server.prod}/api/v1/users/login`, {
+        const userResponse = await axios.get(`${server.dev}/api/v1/users/login`, {
           params: {token}
         })
 
-        const groupResponse = await axios.get(`${server.prod}/api/group`, {
+        const groupResponse = await axios.get(`${server.dev}/api/group`, {
           headers: {
             Authorization: token,
           },
         });
 
-        const chatResponse = await axios.get(`${server.prod}/api/chat`, {
+        const chatResponse = await axios.get(`${server.dev}/api/chat`, {
           headers: {
             Authorization: token,
           },
@@ -56,6 +56,10 @@ function App() {
         setUserData({_id: userResponse.data._id, name: userResponse.data.name, username: userResponse.data.username});
         setChats(chatResponse.data.contacts);
         setGroups(groupResponse.data.groups);
+        console.log("User Data:", userData)
+         if(!userData && location.pathname!="/" && location.pathname!="/auth") {
+    navigate('/auth')
+  }
       } catch (error) {
         console.error("Failed to fetch data:", error);
       } finally {
@@ -64,12 +68,17 @@ function App() {
     };
 
     fetchData();
+   
   }, []);
   
-  if (loading) return <div className="transition-transform ">Loading...</div>;
-  if(!userData && location.pathname!="/" && location.pathname!="/auth") {
-    navigate('/auth')
-  }
+  if(loading) return <div className="min-h-screen min-w-screen flex items-center justify-center"><div className="flex space-x-3 items-center justify-center">
+   <h1 className="text-4xl">Loading </h1><div className="flex space-x-3 items-center justify-center"> <div  className="w-2 h-5 bg-orange-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+  <div className="w-2 h-5 bg-orange-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+  <div className="w-2 h-5 bg-orange-400 rounded-full animate-bounce"></div></div>
+ 
+</div></div>;
+  
+  
   return (
       
         <HistoryProvider>
@@ -78,8 +87,8 @@ function App() {
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/history" element={<History />} />
             <Route path="/meeting" element={<MeetingPage showProfile={showProfile} setShowProfile={setShowProfile}/>}></Route>
-            <Route path="/home" element={<HomePage 
-            user={userData}
+            <Route path="/home" element={<ChatPage 
+            
               groups={groups}
               setGroups={setGroups}
               chats={chats}

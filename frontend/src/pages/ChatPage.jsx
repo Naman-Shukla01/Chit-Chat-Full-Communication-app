@@ -5,10 +5,9 @@ import ChatTab from "../components/ChatTab";
 import ChatWindow from "../components/ChatWindow";
 import Sidebar from "../components/Sidebar";
 import ProfilePage from "./ProfilePage";
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { AuthContext } from "../contexts/AuthContext";
 
-const HomePage = ({
-  user,
+const ChatPage = ({
   groups,
   setGroups,
   chats,
@@ -20,11 +19,11 @@ const HomePage = ({
   const [messages, setMessages] = useState([]);
   const [socket, setSocket] = useState(null);
   const [currentChat, setCurrentChat] = useState(null);
-
+  const { userData: user } = useContext(AuthContext);
   console.log(user);
 
   useEffect(() => {
-    const newSocket = io(server.prod, {
+    const newSocket = io(server.dev, {
       transports: ["websocket"],
       withCredentials: true,
     });
@@ -100,8 +99,8 @@ const HomePage = ({
           <div className="relative flex  justify-center items-center">
             <div className="w-full h-screen flex flex-col items-center justify-center text-center ">
               {/* <DotLottieReact src="/Modal Home.lottie" loop autoplay /> */}
-              <img src="Messages-people.svg" className="p-8 h-80"/>
-              <p className="text-[#FFA324] text-4xl font-semibold">Start Chatting</p>
+              <img src="Messages-people.svg" className="h-[50vh] w-[40vw]"/>
+              <p className="text-[#F7B264] text-4xl font-semibold font-mono">Start Chatting</p>
             </div>
           </div>
         </div>
@@ -110,4 +109,4 @@ const HomePage = ({
   );
 };
 
-export default HomePage;
+export default ChatPage;
