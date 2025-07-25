@@ -70,6 +70,9 @@ function App() {
     fetchData();
    
   }, []);
+  if(!userData && location.pathname!="/" && location.pathname!="/auth") {
+    navigate('/auth')
+  }
   
   if(loading) return <div className="min-h-screen min-w-screen flex items-center justify-center"><div className="flex space-x-3 items-center justify-center">
    <h1 className="text-4xl">Loading </h1><div className="flex space-x-3 items-center justify-center"> <div  className="w-2 h-5 bg-orange-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
