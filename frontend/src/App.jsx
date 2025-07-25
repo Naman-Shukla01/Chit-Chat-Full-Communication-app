@@ -57,7 +57,7 @@ function App() {
         setChats(chatResponse.data.contacts);
         setGroups(groupResponse.data.groups);
         console.log("User Data:", userData)
-         if(!userData && location.pathname!="/" && location.pathname!="/auth") {
+         if((!userResponse && !userResponse?.data?._id) && location.pathname!="/" && location.pathname!="/auth") {
     navigate('/auth')
   }
       } catch (error) {
