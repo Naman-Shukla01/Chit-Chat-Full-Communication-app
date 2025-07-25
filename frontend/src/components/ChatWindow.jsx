@@ -57,23 +57,32 @@ const ChatWindow = ({
   );
 
   const MessageList = () => (
-    <div className="p-2 w-full h-[85vh] overflow-y-auto space-y-3 pb-28
+    <div
+      className="p-2 w-full h-[85vh] overflow-y-auto space-y-3 pb-28
       [&::-webkit-scrollbar]:w-1
       [&::-webkit-scrollbar-track]:rounded-full
       [&::-webkit-scrollbar-track]:bg-gray-100
       [&::-webkit-scrollbar-thumb]:rounded-full
       [&::-webkit-scrollbar-thumb]:bg-transparent
       dark:[&::-webkit-scrollbar-track]:bg-transparent
-      dark:[&::-webkit-scrollbar-thumb]:bg-gray-400">
+      dark:[&::-webkit-scrollbar-thumb]:bg-gray-400"
+    >
       {messages.map((msg) => {
         const isSender = msg.sender?._id === user._id;
         return (
-          <div key={msg._id} className={`flex w-full ${isSender ? "justify-end" : "justify-start"}`}>
-            <div className={`p-2 rounded-lg shadow ${
-              isSender
-                ? "bg-[#F7B264] text-white rounded-br-none"
-                : "bg-white text-[#9E6948] rounded-bl-none"
-            }`}>
+          <div
+            key={msg._id}
+            className={`flex w-full ${
+              isSender ? "justify-end" : "justify-start"
+            }`}
+          >
+            <div
+              className={`p-2 rounded-lg shadow ${
+                isSender
+                  ? "bg-[#F7B264] text-white rounded-br-none"
+                  : "bg-white text-[#9E6948] rounded-bl-none"
+              }`}
+            >
               <p className="text-sm font-semibold">{msg.sender?.username}</p>
               <p className="text-base text-black">{msg.content}</p>
             </div>
@@ -91,10 +100,13 @@ const ChatWindow = ({
         name="message"
         placeholder="Type your message"
         value={message}
-        onChange={(e)=>setMessage(e.target.value)}
+        onChange={(e) => setMessage(e.target.value)}
         className="p-2 text-sm border-2 not-sm:w-full w-[40vw] border-[#F7B264] rounded-full bg-white mr-2"
       />
-      <button type="submit" className="text-xl bg-[#F7B264] text-white rounded-full px-4 py-2">
+      <button
+        type="submit"
+        className="text-xl bg-[#F7B264] text-white rounded-full px-4 py-2"
+      >
         <img src="/sent-icon.svg" alt="Send" />
       </button>
     </form>
@@ -109,7 +121,11 @@ const ChatWindow = ({
         <div className="flex justify-between items-center pb-8">
           <label className="text-2xl font-bold">Group name</label>
           <div onClick={() => setShowGroupEditForm(false)}>
-            <img className="font-extrabold" src="/cancel-icon.svg" alt="Cancel" />
+            <img
+              className="font-extrabold"
+              src="/cancel-icon.svg"
+              alt="Cancel"
+            />
           </div>
         </div>
         <input
@@ -127,14 +143,20 @@ const ChatWindow = ({
 
   const OptionsDropdown = ({ idToCopy }) => (
     <div className="absolute right-5 top-12 w-fit rounded-2xl bg-[#FAECDC] p-2 z-50">
-      <p className="flex gap-1 items-center" onClick={() => {
-        navigator.clipboard.writeText(idToCopy);
-        setShowOptions(false);
-      }}>
+      <p
+        className="flex gap-1 items-center"
+        onClick={() => {
+          navigator.clipboard.writeText(idToCopy);
+          setShowOptions(false);
+        }}
+      >
         <img className="h-4" src="/copy-icon.svg" alt="Copy" /> Copy ID
       </p>
       {currentGroup && (
-        <div className="flex gap-1 items-center" onClick={() => setShowGroupEditForm(true)}>
+        <div
+          className="flex gap-1 items-center"
+          onClick={() => setShowGroupEditForm(true)}
+        >
           <img src="/edit-icon.svg" className="h-4" alt="Edit" /> Edit
         </div>
       )}
@@ -152,7 +174,10 @@ const ChatWindow = ({
         </h1>
         <div className="p-2 text-xl font-semibold">{title}</div>
       </div>
-      <div onClick={() => setShowOptions(!showOptions)} className="m-3 cursor-pointer">
+      <div
+        onClick={() => setShowOptions(!showOptions)}
+        className="m-3 cursor-pointer"
+      >
         <img src="/3dots-icon.svg" className="font-bold" alt="Options" />
       </div>
     </div>
@@ -168,22 +193,28 @@ const ChatWindow = ({
           />
           {showOptions && <OptionsDropdown idToCopy={currentGroup._id} />}
           {showGroupEditForm && <GroupEditForm />}
-       
+
           <BackgroundImage />
           <MessageList />
-          <form onSubmit={sendMessage} className="flex p-4 fixed bottom-0 w-full">
-      <input
-        type="text"
-        name="message"
-        placeholder="Type your message"
-        value={message}
-        onChange={(e)=>setMessage(e.target.value)}
-        className="p-2 text-sm border-2 not-sm:w-full w-[40vw] border-[#F7B264] rounded-full bg-white mr-2"
-      />
-      <button type="submit" className="text-xl bg-[#F7B264] text-white rounded-full px-4 py-2">
-        <img src="/sent-icon.svg" alt="Send" />
-      </button>
-    </form>
+          <form
+            onSubmit={sendMessage}
+            className="flex p-4 fixed bottom-0 w-full"
+          >
+            <input
+              type="text"
+              name="message"
+              placeholder="Type your message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="p-2 text-sm border-2 not-sm:w-full w-[40vw] border-[#F7B264] rounded-full bg-white mr-2"
+            />
+            <button
+              type="submit"
+              className="text-xl bg-[#F7B264] text-white rounded-full px-4 py-2"
+            >
+              <img src="/sent-icon.svg" alt="Send" />
+            </button>
+          </form>
           {/* <MessageInput onSubmit={} /> */}
         </div>
       )}
@@ -195,22 +226,28 @@ const ChatWindow = ({
             onBack={() => setCurrentChat(null)}
           />
           {showOptions && <OptionsDropdown idToCopy={currentChat._id} />}
-          
+
           <BackgroundImage />
           <MessageList />
-          <form onSubmit={sendPersonalMessage} className="flex p-4 fixed bottom-0 w-full">
-      <input
-        type="text"
-        name="message"
-        placeholder="Type your message"
-        value={message}
-        onChange={(e)=>setMessage(e.target.value)}
-        className="p-2 text-sm border-2 not-sm:w-full w-[40vw] border-[#F7B264] rounded-full bg-white mr-2"
-      />
-      <button type="submit" className="text-xl bg-[#F7B264] text-white rounded-full px-4 py-2">
-        <img src="/sent-icon.svg" alt="Send" />
-      </button>
-    </form>
+          <form
+            onSubmit={sendPersonalMessage}
+            className="flex p-4 fixed bottom-0 w-full"
+          >
+            <input
+              type="text"
+              name="message"
+              placeholder="Type your message"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+              className="p-2 text-sm border-2 not-sm:w-full w-[40vw] border-[#F7B264] rounded-full bg-white mr-2"
+            />
+            <button
+              type="submit"
+              className="text-xl bg-[#F7B264] text-white rounded-full px-4 py-2"
+            >
+              <img src="/sent-icon.svg" alt="Send" />
+            </button>
+          </form>
           {/* <MessageInput onSubmit={} /> */}
         </div>
       )}
