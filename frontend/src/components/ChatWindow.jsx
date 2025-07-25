@@ -171,7 +171,20 @@ const ChatWindow = ({
        
           <BackgroundImage />
           <MessageList />
-          <MessageInput onSubmit={sendMessage} />
+          <form onSubmit={sendMessage} className="flex p-4 fixed bottom-0 w-full">
+      <input
+        type="text"
+        name="message"
+        placeholder="Type your message"
+        value={message}
+        onChange={(e)=>setMessage(e.target.value)}
+        className="p-2 text-sm border-2 not-sm:w-full w-[40vw] border-[#F7B264] rounded-full bg-white mr-2"
+      />
+      <button type="submit" className="text-xl bg-[#F7B264] text-white rounded-full px-4 py-2">
+        <img src="/sent-icon.svg" alt="Send" />
+      </button>
+    </form>
+          {/* <MessageInput onSubmit={} /> */}
         </div>
       )}
 
@@ -185,7 +198,20 @@ const ChatWindow = ({
           
           <BackgroundImage />
           <MessageList />
-          <MessageInput onSubmit={sendPersonalMessage} />
+          <form onSubmit={sendPersonalMessage} className="flex p-4 fixed bottom-0 w-full">
+      <input
+        type="text"
+        name="message"
+        placeholder="Type your message"
+        value={message}
+        onChange={(e)=>setMessage(e.target.value)}
+        className="p-2 text-sm border-2 not-sm:w-full w-[40vw] border-[#F7B264] rounded-full bg-white mr-2"
+      />
+      <button type="submit" className="text-xl bg-[#F7B264] text-white rounded-full px-4 py-2">
+        <img src="/sent-icon.svg" alt="Send" />
+      </button>
+    </form>
+          {/* <MessageInput onSubmit={} /> */}
         </div>
       )}
     </div>

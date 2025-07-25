@@ -24,7 +24,7 @@ const ChatTab = ({
     try{
         e.preventDefault();
 
-    const res = await axios.post(`${server.prod}/api/chat/create`, {
+    const res = await axios.post(`${server.dev}/api/chat/create`, {
       username: e.target.name.value,
       senderId: user._id,
     });
@@ -42,7 +42,7 @@ const ChatTab = ({
   const createGroup = async (e) => {
     e.preventDefault();
     console.log(user);
-    const res = await axios.post(`${server.prod}/api/group/create`, {
+    const res = await axios.post(`${server.dev}/api/group/create`, {
       name: e.target.name.value,
       password: e.target.password.value,
       userId: user._id,
@@ -55,7 +55,7 @@ const ChatTab = ({
   const joinGroup = async (e) => {
     e.preventDefault();
 
-    const res = await axios.post(`${server.prod}/api/group/join`, {
+    const res = await axios.post(`${server.dev}/api/group/join`, {
       name: e.target.name.value,
       password: e.target.password.value,
       userId: user._id,
@@ -300,7 +300,7 @@ const ChatTab = ({
                             setCurrentChat(chat);
                             setCurrentGroup(false);
                           }} className={`p-0.7  hover:bg-[#f8b6707e] ${
-                      currentChat && "bg-[#FFBF78]"
+                      (currentChat?._id===chat._id) && "bg-[#FFBF78]"
                     }  rounded-2xl`}>
                     <div className="flex justify-between ">
                       <div className=" flex items-center">
@@ -335,7 +335,7 @@ const ChatTab = ({
                       setCurrentChat(false);
                     }}
                     className={`p-0.7  hover:bg-[#f8b6707e] ${
-                      currentGroup && "bg-[#FFBF78]"
+                      (currentGroup?._id===group._id) && "bg-[#FFBF78]"
                     }  rounded-2xl`}
                   >
                     <div className="flex justify-between">

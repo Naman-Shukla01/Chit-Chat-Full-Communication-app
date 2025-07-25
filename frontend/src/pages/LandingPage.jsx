@@ -6,7 +6,7 @@ const LandingPage = () => {
   return (
     <div className='relative flex flex-col items-center justify-center bg-[#FAECDC] min-h-screen min-w-screen'>
       <div><h1 className="absolute left-10 font-bold text-3xl">Chit Chat</h1></div>
-      <div><img className=" object-contain mt-20  min-h-[50vh] min-w-[40vw] " src=".././connected-people-world.svg" alt="" /></div>
+      <div><img className=" object-contain mt-20  min-h-[40vh] min-w-[40vw] " src=".././connected-people-world.svg" alt="" /></div>
       <div><h1 className='md:text-5xl m-10 text-3xl text-center'><span className='text-[#F7B264]  font-serif'>Connect</span> <span className="font-serif">with your circle in a fun way</span></h1></div>
       <button onClick={()=>navigate("/home")} className="p-5 not-sm:p-3 not-sm:text-xl sm:text-2xl md:text-3xl text-white bg-[#F7B264] border-2 border-[#F7B264] hover:scale-[95%] hover:text-[#F7B264] hover:bg-white  transition-transform rounded-xl">Get Started</button>
     </div>

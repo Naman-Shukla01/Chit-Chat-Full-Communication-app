@@ -1,5 +1,5 @@
 import { Server } from "socket.io"
-
+import Message from "../models/message.model.js";
 
 let connections = {}
 let messages = {}
@@ -19,6 +19,62 @@ export const connectToSocket = (server) => {
     io.on("connection", (socket) => {
 
         console.log("SOMETHING CONNECTED")
+
+        //Chat
+    socket.on("join-group", async ({groupId, password})=>{
+        let allMessage = await Message.find({group: groupId}).populate("sender","username")
+        socket.join(groupId);
+        socket.emit("receive-message", allMessage)
+    })
+
+    socket.on("join-chat", async ({ senderId, receiverId }) => {
+        
+    try {
+        const sentMessages = await Message.find({ sender: senderId, receiver: receiverId })
+            .populate("receiver", "username")
+            .populate("sender", "username");
+
+        const receivedMessages = await Message.find({ sender: receiverId, receiver: senderId })
+            .populate("sender", "username")
+            .populate("receiver", "username");
+        
+        
+        const allMessages = [...sentMessages, ...receivedMessages];
+        
+        allMessages.sort((a, b) => new Date(a.sentAt) - new Date(b.sentAt));
+
+        const roomId = [senderId, receiverId].sort().join("-"); 
+        socket.join(roomId);
+
+        socket.emit("receive-message", allMessages);
+    } catch (error) {
+        console.error("Error joining chat:", error);
+    }
+});
+
+
+    socket.on("send-message", async ({sender, message, groupId})=>{
+        let newMessage = new Message({sender: sender, group: groupId, content: message})
+        await newMessage.save();
+        await newMessage.populate("sender")
+       
+        io.to(groupId).emit("receive-message", newMessage);
+    })
+    
+
+    socket.on("send-personal-message", async ({sender, message, receiver})=>{
+        let newMessage = new Message({sender: sender, receiver: receiver, content: message})
+        console.log(sender, receiver)
+        await newMessage.save();
+        await newMessage.populate("sender")
+        
+         const roomId = [sender, receiver].sort().join("-"); 
+        socket.join(roomId);
+        io.to(roomId).emit("receive-message", newMessage);
+    })
+
+
+        //Meeting
 
         socket.on("join-call", (path) => {
 

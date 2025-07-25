@@ -1,9 +1,9 @@
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import "./App.css";
 import "./styles/cloud.css"
 import LandingPage from "./pages/LandingPage";
 import AuthPage from "./pages/AuthPage";
-import { AuthContext} from "./contexts/AuthContext";
+import { AuthContext } from "./contexts/AuthContext";
 import VideoMeetComponent from "./components/VideoMeet";
 import ChatPage from "./pages/ChatPage";
 import { HistoryProvider } from "./contexts/HistoryContext";
@@ -15,72 +15,88 @@ import AiChatWindow from "./components/AiChatWindow";
 import MeetingPage from "./pages/MeetingPage";
 
 function App() {
-  const {userData, setUserData} = useContext(AuthContext)
+  const { userData, setUserData } = useContext(AuthContext);
   const [loading, setLoading] = useState(true);
   const [groups, setGroups] = useState([]);
   const [chats, setChats] = useState([]);
   const [showProfile, setShowProfile] = useState(false);
 
-  let navigate = useNavigate();
+  const navigate = useNavigate();
+  const location = useLocation();
 
+  // Fetch user + related data on mount
   useEffect(() => {
     const fetchData = async () => {
-
-       try {
+      try {
         const token = localStorage.getItem("token");
         if (!token) {
           setLoading(false);
           return;
         }
-        
-        const userResponse = await axios.get(`${server.prod}/api/v1/users/login`, {
-          params: {token}
-        })
 
-        const groupResponse = await axios.get(`${server.prod}/api/group`, {
-          headers: {
-            Authorization: token,
-          },
+        const userResponse = await axios.get(`${server.dev}/api/v1/users/login`, {
+          params: { token },
         });
 
-        const chatResponse = await axios.get(`${server.prod}/api/chat`, {
-          headers: {
-            Authorization: token,
-          },
+        const user = userResponse.data;
+
+        // No user? Redirect
+        if (!user || !user._id) {
+          navigate("/auth");
+          return;
+        }
+
+        const [groupResponse, chatResponse] = await Promise.all([
+          axios.get(`${server.dev}/api/group`, {
+            headers: { Authorization: token },
+          }),
+          axios.get(`${server.dev}/api/chat`, {
+            headers: { Authorization: token },
+          }),
+        ]);
+
+        // Set context + local state
+        setUserData({
+          _id: user._id,
+          name: user.name,
+          username: user.username,
         });
-
-        console.log("Groups: ", groupResponse.data);
-        console.log("Chats: ", chatResponse.data);
-        console.log("User: ", userResponse.data);
-
-        setUserData({_id: userResponse.data._id, name: userResponse.data.name, username: userResponse.data.username});
-        setChats(chatResponse.data.contacts);
         setGroups(groupResponse.data.groups);
-        console.log("User Data:", userData)
-         if((!userResponse && !userResponse?.data?._id) && location.pathname!="/" && location.pathname!="/auth") {
-    navigate('/auth')
-  }
+        setChats(chatResponse.data.contacts);
       } catch (error) {
-        console.error("Failed to fetch data:", error);
+        console.error("Failed to fetch user or data:", error);
+        navigate("/auth");
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-   
-  }, []);
-  if(!userData && location.pathname!="/" && location.pathname!="/auth") {
-    navigate('/auth')
+  }, [navigate]);
+
+  // Redirect after loading if not logged in
+  useEffect(() => {
+    if (!loading && !userData && location.pathname !== "/" && location.pathname !== "/auth") {
+      navigate("/auth");
+    }
+  }, [loading, userData, location.pathname, navigate]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen min-w-screen flex items-center justify-center">
+        <div className="flex space-x-3 items-center justify-center">
+          <h1 className="text-4xl">Loading </h1>
+          <div className="flex space-x-3 items-center justify-center">
+            <div className="w-2 h-5 bg-orange-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
+            <div className="w-2 h-5 bg-orange-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
+            <div className="w-2 h-5 bg-orange-400 rounded-full animate-bounce"></div>
+          </div>
+        </div>
+      </div>
+    );
   }
-  
-  if(loading) return <div className="min-h-screen min-w-screen flex items-center justify-center"><div className="flex space-x-3 items-center justify-center">
-   <h1 className="text-4xl">Loading </h1><div className="flex space-x-3 items-center justify-center"> <div  className="w-2 h-5 bg-orange-400 rounded-full animate-bounce [animation-delay:-0.3s]"></div>
-  <div className="w-2 h-5 bg-orange-400 rounded-full animate-bounce [animation-delay:-0.15s]"></div>
-  <div className="w-2 h-5 bg-orange-400 rounded-full animate-bounce"></div></div>
- 
-</div></div>;
-  
+
+  console.log("Final userData:", userData);
   
   return (
       
