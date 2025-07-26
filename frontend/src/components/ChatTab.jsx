@@ -16,27 +16,27 @@ const ChatTab = ({
   let [joinGroupClicked, setJoinGroupClicked] = useState(false);
   let [createGroupClicked, setCreateGroupClicked] = useState(false);
   let [createChatClicked, setCreateChatClicked] = useState(false);
+  let [showDeleteForm, setShowDeleteForm] = useState(false);
   const [chatIsOpen, setChatIsOpen] = useState(true);
   let [showOptions, setShowOptions] = useState(false);
   let [error, setError] = useState("");
 
   const createChat = async (e) => {
-    try{
-        e.preventDefault();
+    try {
+      e.preventDefault();
 
-    const res = await axios.post(`${server.dev}/api/chat/create`, {
-      username: e.target.name.value,
-      senderId: user._id,
-    });
+      const res = await axios.post(`${server.dev}/api/chat/create`, {
+        username: e.target.name.value,
+        senderId: user._id,
+      });
 
-    console.log("created chat : ", res);
-    setChats((prevChats) => [...prevChats, res.data]);
-    setCreateChatClicked(!createChat);
-    } catch(err) {
-      console.log(err.response)
-      setError(err.response.data.error)
+      console.log("created chat : ", res);
+      setChats((prevChats) => [...prevChats, res.data]);
+      setCreateChatClicked(!createChat);
+    } catch (err) {
+      console.log(err.response);
+      setError(err.response.data.error);
     }
-    
   };
 
   const createGroup = async (e) => {
@@ -106,7 +106,7 @@ const ChatTab = ({
                 setShowOptions(false);
               }}
               className="flex hover:bg-[#f8b6707e] rounded-2xl p-2 space-x-2"
-              >
+            >
               <img src="/user-add-icon.svg" alt="" />
               <div className="text-lg font-semibold ">Create Chat</div>
             </div>
@@ -118,7 +118,7 @@ const ChatTab = ({
                 setCreateChatClicked(false);
                 setShowOptions(false);
               }}
-              >
+            >
               <img src="/add-team-stroke-rounded.svg" alt="" />
               <p className="text-lg font-semibold">Create Group</p>
             </div>
@@ -131,58 +131,50 @@ const ChatTab = ({
                 setShowOptions(false);
               }}
             >
-              <img src="/join-icon.svg" alt="" className="h-5 w-6 "/>
-              <p className="text-lg font-semibold ">   Join Group</p>
+              <img src="/join-icon.svg" alt="" className="h-5 w-6 " />
+              <p className="text-lg font-semibold "> Join Group</p>
             </div>
           </div>
         </div>
       )}
-          {createGroupClicked && (
-            <div className="fixed inset-0 bg-black/50 w-full h-full z-10 flex justify-center  ">
-              <form
-                className="fixed p-8  flex flex-col bg-white z-10  mt-12 rounded-2xl"
-                action=""
-                onSubmit={createGroup}
-              >
-                <div className="flex flex-row justify-between pb-8 items-center space-x-1">
-                  <label
-                    htmlFor=""
-                    className="text-2xl font-bold text-center"
-                  >
-                    Create New Group
-                  </label>
-                  <div onClick={() => setCreateGroupClicked(false)}>
-                    <img
-                      className="font-extrabold"
-                      src="/cancel-icon.svg"
-                      alt=""
-                    />
-                  </div>
-                </div>
-  
-                <input
-                  className="p-1.5  text-xl border-b-4 border-orange-300 rounded-lg bg-white mr-2"
-                  type="text"
-                  name="name"
-                  required
-                  placeholder="Enter Group name"
-                />
-                <br />
-                <input
-                  className="p-1.5 text-xl border-b-4 border-orange-300 rounded-lg bg-white mr-2"
-                  type="password"
-                  name="password"
-                  placeholder="Enter password"
-                  required
-                />
-                <br />
-                <button className="p-1.5 not-sm:p-1 not-sm:text-xl text-2xl text-white bg-orange-400 border-2 border-orange-400 hover:scale-[95%] hover:text-orange-400 hover:bg-white  transition-transform rounded-xl">
-                  Create
-                </button>
-              </form>
-              
+      {createGroupClicked && (
+        <div className="fixed inset-0 bg-black/50 w-full h-full z-10 flex justify-center  ">
+          <form
+            className="fixed p-8  flex flex-col bg-white z-10  mt-12 rounded-2xl"
+            action=""
+            onSubmit={createGroup}
+          >
+            <div className="flex flex-row justify-between pb-8 items-center space-x-1">
+              <label htmlFor="" className="text-2xl font-bold text-center">
+                Create New Group
+              </label>
+              <div onClick={() => setCreateGroupClicked(false)}>
+                <img className="font-extrabold" src="/cancel-icon.svg" alt="" />
+              </div>
             </div>
-          )}
+
+            <input
+              className="p-1.5  text-xl border-b-4 border-orange-300 rounded-lg bg-white mr-2"
+              type="text"
+              name="name"
+              required
+              placeholder="Enter Group name"
+            />
+            <br />
+            <input
+              className="p-1.5 text-xl border-b-4 border-orange-300 rounded-lg bg-white mr-2"
+              type="password"
+              name="password"
+              placeholder="Enter password"
+              required
+            />
+            <br />
+            <button className="p-1.5 not-sm:p-1 not-sm:text-xl text-2xl text-white bg-orange-400 border-2 border-orange-400 hover:scale-[95%] hover:text-orange-400 hover:bg-white  transition-transform rounded-xl">
+              Create
+            </button>
+          </form>
+        </div>
+      )}
       {joinGroupClicked && (
         <div className="fixed inset-0 bg-black/50 w-full h-full z-10 flex justify-center  ">
           <form
@@ -257,6 +249,7 @@ const ChatTab = ({
           </form>
         </div>
       )}
+
       <div className="">
         <div>
           <div className="p-2 flex justify-between not-sm:p-1">
@@ -286,23 +279,26 @@ const ChatTab = ({
             </button>
           </div>
           {chatIsOpen ? (
-            <div className="overflow-y-auto pb-16 h-[80vh] [&::-webkit-scrollbar]:w-0
+            <div
+              className="overflow-y-auto pb-16 h-[80vh] [&::-webkit-scrollbar]:w-0
   [&::-webkit-scrollbar-track]:rounded-full
   [&::-webkit-scrollbar-track]:bg-transparent
   [&::-webkit-scrollbar-thumb]:rounded-full
   [&::-webkit-scrollbar-thumb]:bg-transparent
-  dark:[&::-webkit-scrollbar-track]:bg-transparent ">
-    
-    
+  dark:[&::-webkit-scrollbar-track]:bg-transparent "
+            >
               {chats?.map((chat) => {
                 return (
-                  <div  onClick={() => {
-                            setCurrentChat(chat);
-                            setCurrentGroup(false);
-                          }} className={`p-0.7  hover:bg-[#f8b6707e] ${
-                      (currentChat?._id===chat._id) && "bg-[#FFBF78]"
-                    }  rounded-2xl`}>
-                    <div className="flex justify-between ">
+                  <div
+                    onClick={() => {
+                      setCurrentChat(chat);
+                      setCurrentGroup(false);
+                    }}
+                    className={`p-0.7 group hover:bg-[#f8b6707e] ${
+                      currentChat?._id === chat._id && "bg-[#FFBF78]"
+                    }  rounded-2xl`}
+                  >
+                    <div className="flex justify-between items-center">
                       <div className=" flex items-center">
                         <h1 className="flex w-8 h-8 m-1 rounded-full bg-white font-bold items-center justify-center">
                           {chat.username.charAt(0).toUpperCase()}
@@ -314,19 +310,61 @@ const ChatTab = ({
                           {chat.username}
                         </h1>
                       </div>
+                      <img
+                        onClick={() => {setShowDeleteForm(true)}}
+                        className="h-6 w-6 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 "
+                        src="/delete-icon.svg"
+                        alt=""
+                      />
                     </div>
+                    {showDeleteForm && (
+                      <div className="fixed inset-0 bg-black/50 w-full h-full z-10 flex justify-center  ">
+                        <div className="fixed p-8 flex flex-col space-y-4 bg-white z-10  mt-12  rounded-2xl">
+                        <div className="flex justify-end">
+                        <img src="/cancel-icon.svg" alt="" className="h-6 w-6 " onClick={()=>setShowDeleteForm(false)}/>
+
+                        </div>
+                        <div className="">
+
+                        <p className="text-lg">Are you sure you want to delete <span className="font-semibold">{chat.username}</span> chat?</p>
+                        
+                        </div>
+                        <button
+                          className="p-1.5 not-sm:p-1 not-sm:text-xl text-2xl text-white bg-red-500 border-2 border-red-500 hover:scale-[95%]  transition-transform rounded-xl"
+                          onClick={async () => {
+                            const token = localStorage.getItem("token");
+                            await axios.delete(
+                              `${server.dev}/api/chat/delete/${chat._id}`,
+                              {
+                              headers: {
+                                Authorization: `Bearer ${token}`,
+                              },
+                              }
+                            );
+                            setChats((prevChats) =>
+                              prevChats.filter((c) => c._id !== chat._id)
+                            );
+                            setShowDeleteForm(false);
+                          }}
+                        >
+                          Delete
+                        </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })}{" "}
             </div>
           ) : (
-            <div className="overflow-y-auto pb-16 h-[80vh] [&::-webkit-scrollbar]:w-0
+            <div
+              className="overflow-y-auto pb-16 h-[80vh] [&::-webkit-scrollbar]:w-0
   [&::-webkit-scrollbar-track]:rounded-full
   [&::-webkit-scrollbar-track]:bg-transparent
   [&::-webkit-scrollbar-thumb]:rounded-full
   [&::-webkit-scrollbar-thumb]:bg-transparent
-  dark:[&::-webkit-scrollbar-track]:bg-transparent ">
-    
+  dark:[&::-webkit-scrollbar-track]:bg-transparent "
+            >
               {groups?.map((group) => {
                 return (
                   <div
@@ -334,11 +372,11 @@ const ChatTab = ({
                       setCurrentGroup(group);
                       setCurrentChat(false);
                     }}
-                    className={`p-0.7  hover:bg-[#f8b6707e] ${
-                      (currentGroup?._id===group._id) && "bg-[#FFBF78]"
+                    className={`p-0.7 group hover:bg-[#f8b6707e] ${
+                      currentGroup?._id === group._id && "bg-[#FFBF78]"
                     }  rounded-2xl`}
                   >
-                    <div className="flex justify-between">
+                    <div className="flex items-center justify-between">
                       <div className=" flex items-center">
                         <h1 className="flex w-8 h-8 m-1 rounded-full bg-white font-bold items-center justify-center">
                           {group.groupname.charAt(0).toUpperCase()}
@@ -350,7 +388,46 @@ const ChatTab = ({
                           {group.groupname}
                         </h1>
                       </div>
+                      <img
+                        onClick={() => {setShowDeleteForm(true)}}
+                        className="h-6 w-6 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200 "
+                        src="/delete-icon.svg"
+                        alt=""
+                      />
                     </div>
+                    {showDeleteForm && (
+                      <div className="fixed inset-0 bg-black/50 w-full h-full z-10 flex justify-center  ">
+                        <div className="fixed p-8 flex flex-col space-y-4 bg-white z-10  mt-12  rounded-2xl">
+                        <div className="flex justify-end">
+                        <img src="/cancel-icon.svg" alt="" className="h-6 w-6 " onClick={()=>setShowDeleteForm(false)}/>
+
+                        </div>
+                        <div className="">
+
+                        <p className="text-lg">Are you sure you want to delete <span className="font-semibold">{group.groupname}</span> group?</p>
+                        
+                        </div>
+                        <button
+                          className="p-1.5 not-sm:p-1 not-sm:text-xl text-2xl text-white bg-red-500 border-2 border-red-500 hover:scale-[95%]  transition-transform rounded-xl"
+                          onClick={async () => {
+                            let token = localStorage.getItem("token")
+                            await axios.delete(
+                              `${server.dev}/api/group/delete/${group._id}`,
+                              {
+                                headers: {Authorization: `Bearer ${token}`
+                                }
+                              }
+
+                            );
+                            setGroups((prevGroups)=> prevGroups.filter((g) => g._id!==group._id))
+                            setShowDeleteForm(false);
+                          }}
+                        >
+                          Delete
+                        </button>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 );
               })}
@@ -358,7 +435,13 @@ const ChatTab = ({
           )}
         </div>
       </div>
-      <div className="">{error && <p className="text-red-600 fixed bottom-5 z-20 p-5 bg-[#FAECDC] ">{error}</p> }</div>
+      <div className="">
+        {error && (
+          <p className="text-red-600 fixed bottom-5 z-20 p-5 bg-[#FAECDC] ">
+            {error}
+          </p>
+        )}
+      </div>
     </div>
   );
 };

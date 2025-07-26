@@ -2,31 +2,35 @@ import httpStatus from "http-status";
 import User from "../models/user.model.js";
 import { Meeting } from "../models/meeting.js";
 import bcrypt, { hash } from "bcrypt";
-import  jwt  from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
 const getUserData = async (req, res) => {
   try {
     let { token } = req.query;
-console.log(token)
+    console.log(token);
     const user = await User.findOne({ token });
     if (!user) {
       return res
         .status(httpStatus.NOT_FOUND)
         .json({ message: "User not found." });
     }
-console.log(":",process.env.JWT_SECRET)
+    console.log(":", process.env.JWT_SECRET);
     if (token) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      if(decoded.id === user._id.toString()){
-        return res.status(httpStatus.OK).json({ token: token, _id: user._id, name: user.name, username: user.username });
+      if (decoded.id === user._id.toString()) {
+        return res
+          .status(httpStatus.OK)
+          .json({
+            token: token,
+            _id: user._id,
+            name: user.name,
+            username: user.username,
+          });
       }
-    } 
-      return res
-        .status(httpStatus.NOT_FOUND)
-        .json({ message: "Token not Valid." });
-    
-
-    
+    }
+    return res
+      .status(httpStatus.NOT_FOUND)
+      .json({ message: "Token not Valid." });
   } catch (err) {
     res.status(500).json({ message: `Something went wrong ${err}` });
   }
@@ -61,7 +65,6 @@ const login = async (req, res) => {
   try {
     let { username, password, token } = req.body;
 
-
     const user = await User.findOne({ username });
     if (!user) {
       return res
@@ -71,12 +74,14 @@ const login = async (req, res) => {
 
     if (token) {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      console.log(token)
-      if(decoded._id === user._id){
-        return res.status(httpStatus.OK).json({ token: token, name: user.name, username: username });
+      console.log(token);
+      if (decoded._id === user._id) {
+        return res
+          .status(httpStatus.OK)
+          .json({ token: token, name: user.name, username: username });
       }
     }
-    
+
     let validPassword = await bcrypt.compare(password, user.password);
     if (validPassword) {
       let token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
@@ -91,6 +96,45 @@ const login = async (req, res) => {
     }
   } catch (err) {
     res.status(500).json({ message: `Something went wrong ${err}` });
+  }
+};
+
+const updateUser = async (req, res) => {
+  try {
+    const {oldUsername, newUsername, name, password } = req.body;
+    console.log(oldUsername, newUsername, name, password);
+
+    const user = await User.findOne({ username:oldUsername });
+    console.log(user)
+    if (!user) {
+      console.log(user)
+      return res
+        .status(httpStatus.NOT_FOUND)
+        .json({ message: "User not found." });
+    }
+
+
+    let validPassword = await bcrypt.compare(password, user.password);
+    if (!validPassword) {
+      return res
+        .status(httpStatus.UNAUTHORIZED)
+        .json({ message: "Invalid password" });
+    }
+
+    const newUser = await User.findOneAndUpdate(
+      { username:oldUsername },                
+      { username:newUsername, name },                    
+      { new: true }                
+    );
+    console.log(newUser)
+  
+
+    res.json({
+      message: "User Profile Updated Successfully",
+      name: newUser.name, username: newUser.username ,
+    });
+  } catch (err) {
+    res.status(500).json({ message: "Can't Update Profile. ERROR:", error: err.message });
   }
 };
 
@@ -128,4 +172,4 @@ const addToHistory = async (req, res) => {
   }
 };
 
-export { signup, login, getUserData, getUserHistory, addToHistory };
+export { signup, login, updateUser, getUserData, getUserHistory, addToHistory };

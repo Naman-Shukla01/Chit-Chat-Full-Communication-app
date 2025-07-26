@@ -40,12 +40,6 @@ function App() {
 
         const user = userResponse.data;
 
-        // No user? Redirect
-        if (!user || !user._id) {
-          navigate("/auth");
-          return;
-        }
-
         const [groupResponse, chatResponse] = await Promise.all([
           axios.get(`${server.dev}/api/group`, {
             headers: { Authorization: token },
@@ -65,7 +59,6 @@ function App() {
         setChats(chatResponse.data.contacts);
       } catch (error) {
         console.error("Failed to fetch user or data:", error);
-        navigate("/auth");
       } finally {
         setLoading(false);
       }
@@ -76,7 +69,7 @@ function App() {
 
   // Redirect after loading if not logged in
   useEffect(() => {
-    if (!loading && !userData && location.pathname !== "/" && location.pathname !== "/auth") {
+    if (!loading && !userData && location.pathname !== "" && location.pathname !== "/" && location.pathname !== "/auth") {
       navigate("/auth");
     }
   }, [loading, userData, location.pathname, navigate]);
