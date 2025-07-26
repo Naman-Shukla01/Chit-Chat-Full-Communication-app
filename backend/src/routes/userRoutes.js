@@ -1,7 +1,9 @@
 import { Router } from "express";
-import { addToHistory, getUserData, getUserHistory, login, signup } from "../controllers/userController.js";
+import { addToHistory, getUserData, updateUser, getUserHistory, login, signup } from "../controllers/userController.js";
 
 const router = Router();
+
+router.route("/").put(updateUser)
 
 router.route("/signup").post(signup);
 

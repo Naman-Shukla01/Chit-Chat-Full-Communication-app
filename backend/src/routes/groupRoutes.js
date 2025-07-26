@@ -7,9 +7,7 @@ router.route("/").get(allGroups)
 router.route("/join").post(joinGroup);
 router.route("/create").post(createGroup);
 
-router.route("/:id")
-.put(updateGroup)
-.delete(deleteGroup)
+router.route("/delete/:groupId").delete(deleteGroup)
 
 
 
