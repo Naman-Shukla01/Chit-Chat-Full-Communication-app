@@ -25,7 +25,7 @@ const ChatTab = ({
     try {
       e.preventDefault();
 
-      const res = await axios.post(`${server.dev}/api/chat/create`, {
+      const res = await axios.post(`${server.prod}/api/chat/create`, {
         username: e.target.name.value,
         senderId: user._id,
       });
@@ -42,7 +42,7 @@ const ChatTab = ({
   const createGroup = async (e) => {
     e.preventDefault();
     console.log(user);
-    const res = await axios.post(`${server.dev}/api/group/create`, {
+    const res = await axios.post(`${server.prod}/api/group/create`, {
       name: e.target.name.value,
       password: e.target.password.value,
       userId: user._id,
@@ -55,7 +55,7 @@ const ChatTab = ({
   const joinGroup = async (e) => {
     e.preventDefault();
 
-    const res = await axios.post(`${server.dev}/api/group/join`, {
+    const res = await axios.post(`${server.prod}/api/group/join`, {
       name: e.target.name.value,
       password: e.target.password.value,
       userId: user._id,
@@ -334,7 +334,7 @@ const ChatTab = ({
                           onClick={async () => {
                             const token = localStorage.getItem("token");
                             await axios.delete(
-                              `${server.dev}/api/chat/delete/${chat._id}`,
+                              `${server.prod}/api/chat/delete/${chat._id}`,
                               {
                               headers: {
                                 Authorization: `Bearer ${token}`,
@@ -412,7 +412,7 @@ const ChatTab = ({
                           onClick={async () => {
                             let token = localStorage.getItem("token")
                             await axios.delete(
-                              `${server.dev}/api/group/delete/${group._id}`,
+                              `${server.prod}/api/group/delete/${group._id}`,
                               {
                                 headers: {Authorization: `Bearer ${token}`
                                 }

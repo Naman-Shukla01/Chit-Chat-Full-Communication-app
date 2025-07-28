@@ -10,7 +10,7 @@ const ProfilePage = () => {
   const [name, setName] = useState(userData?.name);
 
   const updateProfile = async () => {
-    const res = await axios.put(`${server.dev}/api/v1/users`, {
+    const res = await axios.put(`${server.prod}/api/v1/users`, {
       oldUsername: userData.username,
       newUsername:username, name, password: "123456789"
     })

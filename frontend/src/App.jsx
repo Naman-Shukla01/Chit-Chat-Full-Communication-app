@@ -34,17 +34,17 @@ function App() {
           return;
         }
 
-        const userResponse = await axios.get(`${server.dev}/api/v1/users/login`, {
+        const userResponse = await axios.get(`${server.prod}/api/v1/users/login`, {
           params: { token },
         });
 
         const user = userResponse.data;
 
         const [groupResponse, chatResponse] = await Promise.all([
-          axios.get(`${server.dev}/api/group`, {
+          axios.get(`${server.prod}/api/group`, {
             headers: { Authorization: token },
           }),
-          axios.get(`${server.dev}/api/chat`, {
+          axios.get(`${server.prod}/api/chat`, {
             headers: { Authorization: token },
           }),
         ]);
@@ -57,6 +57,8 @@ function App() {
         });
         setGroups(groupResponse.data.groups);
         setChats(chatResponse.data.contacts);
+
+        console.log("Fetched user data:", groupResponse);
       } catch (error) {
         console.error("Failed to fetch user or data:", error);
       } finally {

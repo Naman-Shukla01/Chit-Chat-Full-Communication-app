@@ -3,10 +3,9 @@ import { allGroups, createGroup, joinGroup, updateGroup, deleteGroup } from "../
 
 const router = Router();
 
-router.route("/").get(allGroups)
+router.route("/").get(allGroups).put(updateGroup)
 router.route("/join").post(joinGroup);
 router.route("/create").post(createGroup);
-
 router.route("/delete/:groupId").delete(deleteGroup)
 
 

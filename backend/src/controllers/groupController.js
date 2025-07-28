@@ -51,11 +51,15 @@ const allGroups = async (req, res) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     console.log(decoded);
-    const user = await User.findById(decoded.id).populate("groups");
+    const user = await User.findById(decoded.id).populate({
+      path: "groups",
+      populate: { path: "members" }
+    });
 
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
+    console.log(user)
 
     return res.json({
       userId: user._id,
@@ -117,19 +121,26 @@ const deleteGroup = async (req, res) => {
 
 const updateGroup = async (req, res) => {
   let { groupId, name, password } = req.body;
+  try {
+    let updatedGroup = await Group.findByIdAndUpdate(
+      groupId,
+      { groupname: name },
+      { new: true }
+    );
 
-  let updatedGroup = await Group.findByIdAndUpdate(
-    groupId,
-    { groupname: name, password },
-    { new: true }
-  );
-  return res
-    .status(200)
-    .json({
-      message: "Group Updated Successfully",
-      groupId: updatedGroup._id,
-      groupname: updatedGroup.groupname,
-    });
+    if(!updatedGroup) {
+      return res.status(401).json({message: "Group not found"})
+    }
+
+    return res
+      .status(200)
+      .json({
+        message: "Group Updated Successfully",
+        group: updatedGroup
+      });
+  } catch (e) {
+    res.json({message:"Group Updation ERROR", error:e.message})
+  }
 };
 
 export { joinGroup, createGroup, allGroups, updateGroup, deleteGroup };

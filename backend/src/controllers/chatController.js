@@ -19,7 +19,7 @@ const createChat = async (req, res) => {
   let sender = await User.findById(senderId);
 
   if (!user) return res.json({ error: "User not found" });
-  console.log(sender.contacts);
+  
   if (!user.contacts.includes(sender._id)) {
     user.contacts.push(sender._id);
     await user.save();

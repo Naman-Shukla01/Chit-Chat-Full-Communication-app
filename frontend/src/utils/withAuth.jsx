@@ -11,7 +11,7 @@ const withAuth = (WrappedComponent) => {
             let token = localStorage.getItem("token");
             try {
                 if(token) {
-                let result = await axios.get(`${server.dev}/api/v1/users/login`, {
+                let result = await axios.get(`${server.prod}/api/v1/users/login`, {
                      params:{token} 
             })
         }

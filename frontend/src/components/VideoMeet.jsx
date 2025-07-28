@@ -19,7 +19,7 @@ import server from "../environment";
 
 
 
-const server_url = server.dev;
+const server_url = server.prod;
 
 var connections = {};
 

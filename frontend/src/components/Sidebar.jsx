@@ -27,22 +27,22 @@ const Sidebar = ({ showProfile, setShowProfile }) => {
         <img
           className={
             activeTab === "home"
-              ? "bg-gray-300  p-2 rounded-full w-10 h-10 cursor-pointer transition-shadow ring-0 hover:ring-2 hover:ring-gray-400 "
-              : "rounded-full w-10 h-10 cursor-pointer transition-shadow ring-0 hover:ring-2 hover:ring-gray-400 "
+              ? "ring-2 ring-gray-400  rounded-full w-10 h-10 cursor-pointer transition-shadow hover:ring-2 hover:ring-gray-400 "
+              : "rounded-full w-10 h-10  cursor-pointer transition-shadow ring-0 hover:ring-2 hover:ring-gray-400 "
           }
           onClick={() => {
             setActiveTab("home");
             navigate("/home");
           }}
-          src="/message-icon.svg"
+          src="/chat-icon.svg"
           alt="chat"
         />
 
         <img
           className={
             activeTab === "meeting"
-              ? "bg-gray-300 p-2 rounded-full w-10 h-10 cursor-pointer"
-              : "w-10 h-10 cursor-pointer rounded-full p-1 transition-shadow ring-0 hover:ring-2 hover:ring-gray-400"
+              ? "ring-2 ring-gray-400  rounded-full w-10 h-10 cursor-pointer transition-shadow hover:ring-2 hover:ring-gray-400 "
+              : "w-10 h-10 cursor-pointer rounded-full transition-shadow ring-0 hover:ring-2 hover:ring-gray-400"
           }
           onClick={() => {
             setActiveTab("meeting");
@@ -60,7 +60,7 @@ const Sidebar = ({ showProfile, setShowProfile }) => {
           autoPlay
           className={
             activeTab === "ai-chatbot"
-              ? "cursor-pointer ring-1 ring-gray-300 rounded-full w-10 h-10"
+              ? "cursor-pointer ring-2 ring-gray-400  rounded-full w-10 h-10"
               : "cursor-pointer w-10 h-10 rounded-full  transition-shadow ring-0 hover:ring-2 hover:ring-gray-400"
           }
           onClick={() => {
@@ -74,7 +74,7 @@ const Sidebar = ({ showProfile, setShowProfile }) => {
         className={
           "sm:h-10 sm:w-10 " +
           (showProfile
-            ? "cursor-pointer bg-gray-300 p-2 rounded-full not-sm:inset-0 w-10 h-10"
+            ? "cursor-pointer ring-2 ring-gray-400  rounded-full not-sm:inset-0 w-10 h-10"
             : "rounded-full w-10 h-10 cursor-pointer transition-shadow ring-0 hover:ring-2 hover:ring-gray-400 ")
         }
         onClick={() => setShowProfile(!showProfile)}

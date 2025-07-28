@@ -1,8 +1,10 @@
 import axios from "axios";
 import { useState, useEffect, useRef } from "react";
+import server from "../environment";
 
 const ChatWindow = ({
   socket,
+  setChats,
   setCurrentGroup,
   currentGroup,
   setCurrentChat,
@@ -11,6 +13,7 @@ const ChatWindow = ({
   messages,
 }) => {
   const [message, setMessage] = useState("");
+  const [showGroupDetails, setShowGroupDetails] = useState(false);
   const [showOptions, setShowOptions] = useState(false);
   const [showGroupEditForm, setShowGroupEditForm] = useState(false);
   const bottomMessageRef = useRef();
@@ -46,7 +49,14 @@ const ChatWindow = ({
   const handleGroupUpdateForm = async (e) => {
     e.preventDefault();
     const name = e.target.name.value;
-    await axios.put("/api/group", { groupId: currentGroup._id, name });
+    let response = await axios.put(`${server.prod}/api/group`, {
+      groupId: currentGroup._id,
+      name,
+    });
+
+    if (response.status === 200) {
+      setCurrentGroup(response.data.group);
+    }
   };
 
   const BackgroundImage = () => (
@@ -113,10 +123,10 @@ const ChatWindow = ({
   );
 
   const GroupEditForm = () => (
-    <div className="fixed inset-0 w-full h-full flex bg-black/50 justify-center p-2">
+    <div className="fixed inset-0 w-full h-full flex bg-black/50 justify-center p-2 z-10">
       <form
         onSubmit={handleGroupUpdateForm}
-        className="fixed p-8 space-y-4 border-2 border-[#fcd1a0] flex flex-col bg-[#FAECDC] z-10 mt-12 not-sm:p-1 rounded-2xl"
+        className="fixed p-8 space-y-4   flex flex-col bg-white z-10 mt-12 not-sm:p-1 rounded-2xl"
       >
         <div className="flex justify-between items-center pb-8">
           <label className="text-2xl font-bold">Group name</label>
@@ -142,7 +152,7 @@ const ChatWindow = ({
   );
 
   const OptionsDropdown = ({ idToCopy }) => (
-    <div className="absolute right-5 top-12 w-fit rounded-2xl bg-[#FAECDC] p-2 z-50">
+    <div className="absolute right-5 top-12 w-fit rounded-2xl bg-[#FAECDC] p-2 space-y-1">
       <p
         className="flex gap-1 items-center"
         onClick={() => {
@@ -172,7 +182,12 @@ const ChatWindow = ({
         <h1 className="h-10 flex items-center justify-center w-10 rounded-full font-bold bg-[#F7B264] text-black ">
           {title.charAt(0).toUpperCase()}
         </h1>
-        <div className="p-2 text-xl font-semibold">{title}</div>
+        <div
+          className="p-2 text-xl font-semibold"
+          onClick={() => setShowGroupDetails(true)}
+        >
+          {title}
+        </div>
       </div>
       <div
         onClick={() => setShowOptions(!showOptions)}
@@ -186,11 +201,42 @@ const ChatWindow = ({
   return (
     <div className="w-full">
       {currentGroup && (
-        <div className="w-full not-sm:fixed not-sm:z-50 not-sm:inset-0">
+        <div
+          className="w-full not-sm:fixed not-sm:z-50 not-sm:inset-0"
+          onClick={() => {
+            if (showGroupDetails === true) setShowGroupDetails(false);
+          }}
+        >
           <ChatHeader
             title={currentGroup.groupname}
             onBack={() => setCurrentGroup(null)}
           />
+          {showGroupDetails && (
+            <div className="w-1/3 absolute m-2 p-2 overflow-y-auto drop-shadow-lg bg-white rounded-2xl">
+              <div className="flex justify-between items-center">
+                <h1 className="font-mono font-bold text-lg py-2">Members</h1>
+                <p className="font-mono font-bold text-lg py-2">
+                  ({currentGroup.members.length})
+                </p>
+              </div>
+              {currentGroup.members.map((member) => (
+                <div className="group flex items-center justify-between p-1">
+                  {user._id !== member._id ? <>
+                  <p>{member.name}</p>
+                  <img
+                  onClick={() => {
+                    setCurrentChat({...member, new:true});
+                    setShowGroupDetails(false);
+                  setCurrentGroup(null)}}
+                    src="/chat-icon.svg"
+                    alt="chat"
+                    className="h-6 w-6 bg-clip-padding opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                  />
+                  </>: <p className="text-gray-400">You</p>}
+                </div>
+              ))}
+            </div>
+          )}
           {showOptions && <OptionsDropdown idToCopy={currentGroup._id} />}
           {showGroupEditForm && <GroupEditForm />}
 
@@ -229,6 +275,18 @@ const ChatWindow = ({
 
           <BackgroundImage />
           <MessageList />
+          {currentChat.new && 
+          <div className="absolute top-16 left-2/3 bg-white p-4 rounded-lg drop-shadow-2xl ">
+            <p>Add {currentChat.username} to chats </p>
+            <button className=" cursor-pointer  bg-[#F7B264] min-w-fit rounded-lg p-1" onClick={()=>{
+              setCurrentChat((prev) => ({ ...prev, new: false }));
+              setChats((prev) => [...prev, currentChat]);
+              axios.post(`${server.prod}/api/chat/create`, {
+                username: currentChat.username,
+                senderId: user._id,
+              });
+            }}>Add</button>
+            </div>}
           <form
             onSubmit={sendPersonalMessage}
             className="flex p-4 fixed bottom-0 w-full"

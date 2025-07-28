@@ -23,7 +23,7 @@ const ChatPage = ({
   console.log(user);
 
   useEffect(() => {
-    const newSocket = io(server.dev, {
+    const newSocket = io(server.prod, {
       transports: ["websocket"],
       withCredentials: true,
     });
@@ -65,6 +65,12 @@ const ChatPage = ({
     };
   }, [socket, currentGroup, currentChat]);
 
+  useEffect(()=>{
+    if(currentGroup)
+    setGroups((prevGroups)=> (prevGroups.map(group=> group?._id === currentGroup._id? currentGroup: group)))
+  },[setCurrentGroup])
+
+  
   return (
     <div className="fixed w-full">
       <div className="flex w-full">
@@ -88,6 +94,7 @@ const ChatPage = ({
         <div className="w-full m-2">
           <ChatWindow
             socket={socket}
+            setChats={setChats}
             setCurrentGroup={setCurrentGroup}
             currentGroup={currentGroup}
             setCurrentChat={setCurrentChat}
